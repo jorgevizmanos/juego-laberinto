@@ -12,6 +12,7 @@ public class Ventana extends JFrame {
         this.setSize(tablero.getWidth(), tablero.getHeight() + 100);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
         this.add(tablero);
         this.setVisible(true);
     }
