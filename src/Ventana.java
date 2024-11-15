@@ -9,7 +9,7 @@ public class Ventana extends JFrame {
     // CONSTRUCTORES
     //==================================================================================================================
     public Ventana() {
-        this.setSize(tablero.getWidth(), tablero.getHeight());
+        this.setSize(tablero.getWidth(), tablero.getHeight() + 100);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.add(tablero);
