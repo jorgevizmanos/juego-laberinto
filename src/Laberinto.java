@@ -6,10 +6,11 @@ public class Laberinto {
     //==================================================================================================================
     private int anchoBloque = 25;
     private int altoBloque = 25;
-    private int fila = 0;
-    private int columna = 0;
+
     private int numeroColumna = 28;
     private int numeroFila = 28;
+    private int fila = 0;
+    private int columna = 0;
 
     // CONSTRUCTORES
     //==================================================================================================================

@@ -28,6 +28,7 @@ public class Tablero extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         iniciarPosicionRandomCalabaza();
+        iniciarPosicionRandomPocion();
 
         laberinto.pintarLaberinto(g2d);
         pocion.pintar(g2d);
@@ -35,10 +36,40 @@ public class Tablero extends JPanel {
     }
 
     public void iniciarPosicionRandomCalabaza() {
-        calabaza.setX(random.nextInt(ANCHO));
-        calabaza.setY(random.nextInt(ALTO));
-        System.out.println(calabaza.getX() + " " + calabaza.getY());
+        int[][] mazeArray = laberinto.crearLaberinto();
+        boolean posicionValida = false;
+
+        while (!posicionValida) {
+            // Obtener posición aleatoria en el grid
+            int gridX = random.nextInt(28); // numeroColumna
+            int gridY = random.nextInt(28); // numeroFila
+
+            // Verificar si es pasillo (0)
+            if (mazeArray[gridY][gridX] == 0) {
+                // Convertir posición de grid a píxeles
+                calabaza.setX(gridX * 25); // anchoBloque
+                calabaza.setY(gridY * 25); // altoBloque
+                posicionValida = true;
+            }
+        }
     }
 
+    public void iniciarPosicionRandomPocion() {
+        int[][] mazeArray = laberinto.crearLaberinto();
+        boolean posicionValida = false;
 
+        while (!posicionValida) {
+            // Obtener posición aleatoria en el grid
+            int gridX = random.nextInt(28); // numeroColumna
+            int gridY = random.nextInt(28); // numeroFila
+
+            // Verificar si es pasillo (0)
+            if (mazeArray[gridY][gridX] == 0) {
+                // Convertir posición de grid a píxeles
+                pocion.setX(gridX * 25); // anchoBloque
+                pocion.setY(gridY * 25); // altoBloque
+                posicionValida = true;
+            }
+        }
+    }
 }

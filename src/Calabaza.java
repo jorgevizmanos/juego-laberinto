@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.Random;
 
 public class Calabaza extends ObjetosMagicos{
     // atributos
@@ -19,7 +18,7 @@ public class Calabaza extends ObjetosMagicos{
     @Override
     public void pintar(Graphics g) {
         g.setColor(Color.orange);
-        g.fillOval(x, y, 40,40);
+        g.fillOval(x, y, 20,20);
     }
 
     public int getX() {
