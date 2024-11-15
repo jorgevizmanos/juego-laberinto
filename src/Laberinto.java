@@ -42,6 +42,7 @@ public class Laberinto {
         }
     }
 
+    // metodo que crea un laberinto
     public int[][] crearLaberinto() {
         int[][] laberinto = {
                 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
