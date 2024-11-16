@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class Calabaza extends ObjetosMagicos {
@@ -8,11 +9,20 @@ public class Calabaza extends ObjetosMagicos {
     private int x, y; // posicion coordenadas
     private int velocidad = 2; // desplazamiento
 
-    Laberinto laberinto = new Laberinto();
+    private Laberinto laberinto = new Laberinto();
+    private Image imagen;
 
     // CONSTRUCTORES
     //==================================================================================================================
     public Calabaza() {
+        // cargamos la imagen de la calabaza una vez solo, en el constructor (para evitar errores con el repaint() )
+        try {
+            imagen = new ImageIcon(getClass().getResource("/imagenes/calabaza.png")).getImage();
+        } catch (Exception e) {
+            System.out.println("Error al cargar la imagen de la calabaza: " + e.getMessage());
+            // Si falla la carga, dibujamos un círculo naranja como respaldo
+            imagen = null;
+        }
     }
 
     // METODOS
@@ -30,8 +40,13 @@ public class Calabaza extends ObjetosMagicos {
 
     @Override
     public void pintar(Graphics g) {
-        g.setColor(Color.orange);
-        g.fillOval(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA);
+        if (imagen != null) {
+            g.drawImage(imagen, x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA, null);
+        } else {
+            // Si no se pudo cargar la imagen, dibujamos un círculo naranja
+            g.setColor(Color.ORANGE);
+            g.fillOval(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA);
+        }
     }
 
     public void moverCalabaza(int[][] lab) {

@@ -28,7 +28,7 @@ public class Laberinto {
                 if (laberinto[fila][columna] == 1) {
 
                     // pintamos muro
-                    g2d.setColor(Color.BLUE);
+                    g2d.setColor(Color.GRAY);
                     g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
 
                     g2d.setColor(Color.BLACK);
@@ -74,7 +74,7 @@ public class Laberinto {
                 {1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
                 {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1}
-        }; 
+        };
         return laberinto;
     }
 
