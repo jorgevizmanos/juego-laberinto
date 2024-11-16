@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Zombie {
     // ATRIBUTOS
     //==================================================================================================================
-    private final int TAMANYO_ZOMBIE = 45;
+    private final int TAMANYO_ZOMBIE = 40;
     private int x, y;
     private int velocidad; // desplazamiento del zombie
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
