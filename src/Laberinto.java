@@ -77,4 +77,55 @@ public class Laberinto {
         }; 
         return laberinto;
     }
+
+    // METODOS GETTERS & SETTERS
+    //==================================================================================================================
+
+    public int getAnchoBloque() {
+        return anchoBloque;
+    }
+
+    public void setAnchoBloque(int anchoBloque) {
+        this.anchoBloque = anchoBloque;
+    }
+
+    public int getAltoBloque() {
+        return altoBloque;
+    }
+
+    public void setAltoBloque(int altoBloque) {
+        this.altoBloque = altoBloque;
+    }
+
+    public int getNumeroColumna() {
+        return numeroColumna;
+    }
+
+    public void setNumeroColumna(int numeroColumna) {
+        this.numeroColumna = numeroColumna;
+    }
+
+    public int getNumeroFila() {
+        return numeroFila;
+    }
+
+    public void setNumeroFila(int numeroFila) {
+        this.numeroFila = numeroFila;
+    }
+
+    public int getFila() {
+        return fila;
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public int getColumna() {
+        return columna;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
+    }
 }

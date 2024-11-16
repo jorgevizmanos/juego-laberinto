@@ -3,20 +3,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-public class Calabaza extends ObjetosMagicos{
-    // atributos
+public class Calabaza extends ObjetosMagicos {
+
+    // ATRIBUTOS
+    //==================================================================================================================
+    private static final int TAMANIO_CALABAZA = 20;  // Declaramos el tamaño como constante
     private int x, y;
-    private int velocidad = 1;
-    private Tablero tablero;
+    private int velocidad = 2;
     Laberinto laberinto = new Laberinto();
 
-    public Calabaza (Tablero tablero) {
-        this.tablero = tablero;
-        moverCalabaza();
-
+    // CONSTRUCTORES
+    //==================================================================================================================
+    public Calabaza() {
     }
 
-    // metodos
+    // METODOS
+    //==================================================================================================================
+
     @Override
     public void desaparecer() {
 
@@ -30,27 +33,39 @@ public class Calabaza extends ObjetosMagicos{
     @Override
     public void pintar(Graphics g) {
         g.setColor(Color.orange);
-        g.fillOval(x, y, 20,20);
+        g.fillOval(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA);
     }
 
-    public void moverCalabaza() {
+    public void moverCalabaza(int[][] lab) {
+        // calculamos la proxima posicion en X de la calabaza
+        int proximaPosX = x + velocidad;
 
-        int [][] lab = laberinto.crearLaberinto();
+        // si se desplaza hacia la derecha
+        if (velocidad > 0) {
+            // detectamos si hay colision en el extremo derecho de la calabaza
+            if (lab[y/laberinto.getAltoBloque()][(proximaPosX + TAMANIO_CALABAZA)/ laberinto.getAnchoBloque()] == 1) {
+                velocidad = -velocidad; // invertimos direccion
 
-        Timer timer = new Timer(20, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                x += velocidad;
-                if (lab[y/25][(x/25 +1)] == 1 || lab[y/25][(x/25 -1)] == 1) {
-                        velocidad = -velocidad;
-                }
-                tablero.repaint();
+            } else {
+                // si no hay colision, actualizamos la posicion a la nueva para avanzar
+                x = proximaPosX;
             }
-        });
-        timer.start();
+
+            // en caso de desplazarse hacia la izquierda
+        } else {
+            // detectamos si hay colision en el extremo izquierdo de la calabaza
+            if (lab[y/laberinto.getAltoBloque()][proximaPosX/laberinto.getAnchoBloque()] == 1) {
+                // si hay colision, invertimos la direccion
+                velocidad = -velocidad;
+            } else {
+                // si no hay colision, actualizamos la posicion a la nueva para avanzar
+                x = proximaPosX;
+            }
+        }
     }
 
-
+    // METODOS GETTERS & SETTERS
+    //==================================================================================================================
     public int getX() {
         return x;
     }
