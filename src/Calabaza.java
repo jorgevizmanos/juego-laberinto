@@ -1,15 +1,13 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.Timer;
 
 public class Calabaza extends ObjetosMagicos {
 
     // ATRIBUTOS
     //==================================================================================================================
-    private static final int TAMANIO_CALABAZA = 20;  // Declaramos el tamaño como constante
-    private int x, y;
-    private int velocidad = 2;
+    private static final int TAMANIO_CALABAZA = 25;  // declaramos el tamanyo como constante
+    private int x, y; // posicion coordenadas
+    private int velocidad = 2; // desplazamiento
+
     Laberinto laberinto = new Laberinto();
 
     // CONSTRUCTORES
@@ -43,7 +41,7 @@ public class Calabaza extends ObjetosMagicos {
         // si se desplaza hacia la derecha
         if (velocidad > 0) {
             // detectamos si hay colision en el extremo derecho de la calabaza
-            if (lab[y/laberinto.getAltoBloque()][(proximaPosX + TAMANIO_CALABAZA)/ laberinto.getAnchoBloque()] == 1) {
+            if (lab[y / laberinto.getAltoBloque()][(proximaPosX + TAMANIO_CALABAZA) / laberinto.getAnchoBloque()] == 1) {
                 velocidad = -velocidad; // invertimos direccion
 
             } else {
@@ -54,7 +52,7 @@ public class Calabaza extends ObjetosMagicos {
             // en caso de desplazarse hacia la izquierda
         } else {
             // detectamos si hay colision en el extremo izquierdo de la calabaza
-            if (lab[y/laberinto.getAltoBloque()][proximaPosX/laberinto.getAnchoBloque()] == 1) {
+            if (lab[y / laberinto.getAltoBloque()][proximaPosX / laberinto.getAnchoBloque()] == 1) {
                 // si hay colision, invertimos la direccion
                 velocidad = -velocidad;
             } else {
@@ -80,5 +78,8 @@ public class Calabaza extends ObjetosMagicos {
 
     public void setY(int y) {
         this.y = y;
+    }
+    public static int getTAMANIO_CALABAZA() {
+        return TAMANIO_CALABAZA;
     }
 }

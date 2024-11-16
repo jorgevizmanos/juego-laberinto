@@ -11,10 +11,11 @@ public class Tablero extends JPanel implements ActionListener {
     //==================================================================================================================
     private static final int ALTO = 700;
     private static final int ANCHO = 700;
+    private int arrayLaberinto[][];
 
-    private Laberinto lab = new Laberinto();
-    private int laberinto[][];
-    private ArrayList<Calabaza> calabazas; // lista de 5 objetos Calabaza
+    private Laberinto laberinto = new Laberinto();
+    private ArrayList<Zombie> zombies = new ArrayList<>();
+    private ArrayList<Calabaza> calabazas = new ArrayList<>(); // lista de 5 objetos Calabaza
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
@@ -29,16 +30,14 @@ public class Tablero extends JPanel implements ActionListener {
 
         // creacion de los elementos (personajes, calabazas y pocion)
         crearLaberinto();
+        crearZombies();
         crearCalabazas();
 
         // inicializacion de los elementos del tablero y el timer
-        iniciarPosicionRandomCalabaza();
+        iniciarPosicionZombies();
+        iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();
         iniciarTimer();
-    }
-
-    private int[][] crearLaberinto() {
-        return laberinto = lab.crearLaberinto();
     }
 
     // METODOS
@@ -54,7 +53,7 @@ public class Tablero extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // actualizar movimientos de las calabazas
         for (Calabaza calabaza : calabazas) {
-            calabaza.moverCalabaza(laberinto);
+            calabaza.moverCalabaza(arrayLaberinto);
         }
 
         // actualizar posiciones de los personajes
@@ -74,25 +73,62 @@ public class Tablero extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        lab.pintarLaberinto(g2d);
-        pocion.pintar(g2d);
+        laberinto.pintarLaberinto(g2d); // pintamos laberinto
 
-        // recorremos el ArrayList de calabazas para pintar cada calabaza (5)
-        for (Calabaza calabaza : calabazas) {
+        for (Zombie zombie : zombies) { // pintamos zombies: recorremos su ArrayList de 2 zombies para ello
+            zombie.pintar(g);
+        }
+
+        for (Calabaza calabaza : calabazas) { // pintamos calabazas: recorremos su ArrayList de 5 calbazas para ello
             calabaza.pintar(g2d);
         }
+
+        pocion.pintar(g2d); // pintamos pocion
+
+    }
+
+    // LABERINTO
+    private int[][] crearLaberinto() {
+        return arrayLaberinto = laberinto.crearLaberinto();
+    }
+
+    // ZOMBIES
+    private void crearZombies() {
+        for (int i = 0; i < 2; i++) {
+            zombies.add(new Zombie());
+        }
+    }
+
+    private void iniciarPosicionZombies() {
+        int anchoBloque = laberinto.getAnchoBloque();
+        int mitadBloque = anchoBloque / 2;
+
+        // zombie 1 (esquina superior izquierda)
+        Zombie zombie1 = zombies.get(0);
+        int mitadZombieX = zombie1.getTamanyo()/2;
+        int mitadZombieY = zombie1.getTamanyo()/2;
+        int zombieX1 = mitadBloque - mitadZombieX;
+        int zombieY1 = mitadBloque - mitadZombieY;
+        zombie1.setX(zombieX1 + anchoBloque);
+        zombie1.setY(zombieY1 + anchoBloque);
+
+        // zombie 2 (esquina superior derecha)
+        Zombie zombie2 = zombies.get(1);
+        int zombieX2 = mitadBloque - mitadZombieX;
+        int zombieY2 = mitadBloque - mitadZombieY;
+        zombie2.setX(zombieX2 + (26 * anchoBloque)); // 26 bloques a la derecha
+        zombie2.setY(zombieY2 + anchoBloque);
     }
 
     // CALABAZAS
     private void crearCalabazas() {
-        calabazas = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             calabazas.add(new Calabaza());
         }
     }
 
-    public void iniciarPosicionRandomCalabaza() {
-        // Inicializar posición para cada calabaza del ArrayList
+    public void iniciarPosicionRandomCalabazas() {
+        // inicializar posición para cada calabaza del ArrayList
         for (Calabaza calabaza : calabazas) {
             boolean posicionValida = false;
 
@@ -100,9 +136,9 @@ public class Tablero extends JPanel implements ActionListener {
                 int gridX = random.nextInt(28);
                 int gridY = random.nextInt(28);
 
-                if (laberinto[gridY][gridX] == 0) {
+                if (arrayLaberinto[gridY][gridX] == 0) {
                     calabaza.setX(gridX * 25);
-                    calabaza.setY(gridY * 25);
+                    calabaza.setY(gridY * 25 );
                     posicionValida = true;
                 }
             }
@@ -119,7 +155,7 @@ public class Tablero extends JPanel implements ActionListener {
             int gridY = random.nextInt(28); // numeroFila
 
             // Verificar si es pasillo (0)
-            if (laberinto[gridY][gridX] == 0) {
+            if (arrayLaberinto[gridY][gridX] == 0) {
                 // Convertir posición de grid a píxeles
                 pocion.setX(gridX * 25); // anchoBloque
                 pocion.setY(gridY * 25); // altoBloque
