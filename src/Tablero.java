@@ -8,7 +8,7 @@ public class Tablero extends JPanel {
     private static final int ALTO = 700;
     private static final int ANCHO = 700;
     Laberinto laberinto = new Laberinto();
-    Calabaza calabaza = new Calabaza();
+    Calabaza calabaza = new Calabaza(this);
     Pocion pocion = new Pocion();
     Random random = new Random();
 
@@ -17,6 +17,8 @@ public class Tablero extends JPanel {
     public Tablero() {
         this.setSize(ANCHO, ALTO);
         this.setBackground(Color.DARK_GRAY);
+        iniciarPosicionRandomCalabaza();
+        iniciarPosicionRandomPocion();
     }
 
     // METODOS
@@ -26,9 +28,6 @@ public class Tablero extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
-        iniciarPosicionRandomCalabaza();
-        iniciarPosicionRandomPocion();
 
         laberinto.pintarLaberinto(g2d);
         pocion.pintar(g2d);
