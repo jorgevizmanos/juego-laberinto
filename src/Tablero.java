@@ -15,7 +15,7 @@ public class Tablero extends JPanel implements ActionListener {
 
     private Laberinto laberinto = new Laberinto();
     private ArrayList<Zombie> zombies = new ArrayList<>();
-    private ArrayList<Calabaza> calabazas = new ArrayList<>(); // lista de 5 objetos Calabaza
+    private ArrayList<Calabaza> calabazas = new ArrayList<>();
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
@@ -30,8 +30,8 @@ public class Tablero extends JPanel implements ActionListener {
 
         // creacion de los elementos (personajes, calabazas y pocion)
         crearLaberinto();
-        crearZombies();
-        crearCalabazas();
+        crearZombies(); // 2 zombies
+        crearCalabazas(); // 5 calabazas
 
         // inicializacion de los elementos del tablero y el timer
         iniciarPosicionZombies();
@@ -43,7 +43,7 @@ public class Tablero extends JPanel implements ActionListener {
     // METODOS
     //==================================================================================================================
     public void iniciarTimer() {
-        timer = new Timer(20, this); // 'this' es la implementacion ActionListener en esta clase
+        timer = new Timer(40, this); // 'this' es la implementacion ActionListener en esta clase
                                                     // y su metodo actionPerfomed()
         timer.start();
     }
@@ -51,6 +51,11 @@ public class Tablero extends JPanel implements ActionListener {
     // ACTION PERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
+        // iniciamos sprites/animacion de los zombies
+        for (Zombie zombie : zombies) {
+            zombie.actualizarAnimacion();
+        }
+
         // actualizar movimientos de las calabazas
         for (Calabaza calabaza : calabazas) {
             calabaza.moverCalabaza(arrayLaberinto);
@@ -75,9 +80,9 @@ public class Tablero extends JPanel implements ActionListener {
 
         laberinto.pintarLaberinto(g2d); // pintamos laberinto
 
-        for (Zombie zombie : zombies) { // pintamos zombies: recorremos su ArrayList de 2 zombies para ello
-            zombie.pintar(g);
-        }
+        zombies.get(0).pintar(g, this, false);
+        zombies.get(1).pintar(g, this, true);
+
 
         for (Calabaza calabaza : calabazas) { // pintamos calabazas: recorremos su ArrayList de 5 calbazas para ello
             calabaza.pintar(g2d);
@@ -94,9 +99,10 @@ public class Tablero extends JPanel implements ActionListener {
 
     // ZOMBIES
     private void crearZombies() {
-        for (int i = 0; i < 2; i++) {
-            zombies.add(new Zombie());
-        }
+        Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
+        Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
+        zombies.add(zombieHombre);
+        zombies.add(zombieMujer);
     }
 
     private void iniciarPosicionZombies() {

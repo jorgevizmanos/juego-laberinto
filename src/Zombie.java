@@ -1,21 +1,80 @@
+import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Zombie {
     // ATRIBUTOS
     //==================================================================================================================
-    private static final int TAMANYO_ZOMBIE = 20;
+    private final int TAMANYO_ZOMBIE = 45;
     private int x, y;
-    private int velocidad;
+    private int velocidad; // desplazamiento del zombie
+    private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
+    private int spriteActual = 0; // indice del sprite actual (fotograma)
+    private Sexo sexo;
+
 
     // CONSTRUCTORES
     //==================================================================================================================
-
+    public Zombie(Sexo sexo, Component observer) { // observer necesitado para inicializar sprites
+        this.sexo = sexo;
+        this.animacion = new ArrayList<>();
+        inicializarSprites(observer); // cargamos recursos sprites PERO la animacion debe ser actualizada en actionPerformed() de Tablero
+    }
 
     // METODOS
     //==================================================================================================================
-    public void pintar(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillOval(x,y, TAMANYO_ZOMBIE, TAMANYO_ZOMBIE);
+    private void inicializarSprites(Component observer) { // pasamos el oberver, que es 'this' en Tablero
+        // elegimos carpeta de sprites segun el sexo del zombie
+        String carpeta;
+        if (sexo == Sexo.HOMBRE) {
+            carpeta = "sprites_zombieM"; // ASI SE LLAMA LA CARPETA DE RECURSOS
+        } else {
+            carpeta = "sprites_zombieF";
+        }
+
+        // recorremos cada imagen dentro de la carpeta de sprites para anyadirlas a la animacion (son 5)
+        for (int i = 1; i <= 5; i++) {
+            try {
+                String ruta = "imagenes/" + carpeta + "/Walk (" + i + ").png"; // carpeta--> directorio M/H; i--> imagen actual del directorio
+                Image spriteOriginal = new ImageIcon(getClass().getResource(ruta)).getImage(); // volcamos la imagen actual del directorio en variable
+
+                // ajustamos tamanyo imagen: calculamos la nueva anchura manteniendo la proporcion de la imagen
+                double proporcion = (double) spriteOriginal.getWidth(observer) / spriteOriginal.getHeight(observer);
+                int nuevoAncho = (int) (TAMANYO_ZOMBIE * proporcion);
+
+                // creamos imagen escalada manteniendo proporciones
+                Image spriteEscalado = spriteOriginal.getScaledInstance(nuevoAncho, TAMANYO_ZOMBIE, Image.SCALE_SMOOTH);
+                animacion.add(spriteEscalado);
+
+            } catch (Exception e) {
+                System.out.println("Error cargando sprite " + i + ": " + e.getMessage());
+            }
+        }
+    }
+
+    public void pintar(Graphics g, Component observer, boolean reflejado) {
+        if (!animacion.isEmpty()) {
+            Graphics2D g2d = (Graphics2D) g;
+            Image spriteActual = animacion.get(this.spriteActual);
+
+            if (reflejado) {
+                // reflejamos horizontalmente la imagen
+                g2d.drawImage(spriteActual, x + getTamanyo(), y, -getTamanyo(), getTamanyo(),observer); // width inverso
+
+                g2d.setColor(Color.RED); // BORRAR MAS ADELANTE
+                g2d.drawRect(x,y,getTamanyo(),getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
+            } else {
+                // dibujo sin reflejo
+                g2d.drawImage(spriteActual, x, y, getTamanyo(), getTamanyo(), observer);
+
+                g2d.setColor(Color.RED); // BORRAR MAS ADELANTE
+                g2d.drawRect(x,y,getTamanyo(),getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
+            }
+        }
+    }
+
+    public void actualizarAnimacion() {
+        spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
     }
 
     // METODOS SETTERS & GETTERS

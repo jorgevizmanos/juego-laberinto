@@ -5,9 +5,9 @@ public class Calabaza extends ObjetosMagicos {
 
     // ATRIBUTOS
     //==================================================================================================================
-    private static final int TAMANIO_CALABAZA = 25;  // declaramos el tamanyo como constante
+    private static final int TAMANIO_CALABAZA = 30;  // declaramos el tamanyo como constante
     private int x, y; // posicion coordenadas
-    private int velocidad = 2; // desplazamiento
+    private int velocidad = 3; // desplazamiento
 
     private Laberinto laberinto = new Laberinto();
     private Image imagen;
@@ -41,6 +41,9 @@ public class Calabaza extends ObjetosMagicos {
     @Override
     public void pintar(Graphics g) {
         if (imagen != null) {
+            g.setColor(Color.RED); // BORRAR AL FINAL
+            g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BORRAR AL FINAL
+
             g.drawImage(imagen, x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA, null);
         } else {
             // Si no se pudo cargar la imagen, dibujamos un círculo naranja
