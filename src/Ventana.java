@@ -15,6 +15,8 @@ public class Ventana extends JFrame {
         this.setResizable(false);
         this.add(tablero);
         this.setVisible(true);
+
+        tablero.repintarZombies();
     }
 
     // METODOS

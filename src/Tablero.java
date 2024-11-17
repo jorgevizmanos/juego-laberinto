@@ -2,10 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tablero extends JPanel implements ActionListener {
+public class Tablero extends JPanel implements ActionListener , KeyListener {
 
     // ATRIBUTOS
     //==================================================================================================================
@@ -19,7 +21,10 @@ public class Tablero extends JPanel implements ActionListener {
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
-    private Timer timer; // un unico timer sobre todos los elementos del tablero
+    private Timer timer;
+
+    private Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);// un unico timer sobre todos los elementos del tablero
+
 
     // CONSTRUCTORES
     //==================================================================================================================
@@ -100,7 +105,7 @@ public class Tablero extends JPanel implements ActionListener {
 
     // ZOMBIES
     private void crearZombies() {
-        Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
+        //Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
         Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
         zombies.add(zombieHombre);
         zombies.add(zombieMujer);
@@ -169,5 +174,32 @@ public class Tablero extends JPanel implements ActionListener {
                 posicionValida = true;
             }
         }
+    }
+
+    public void repintarZombies() {
+        while(true) {
+            repaint();
+            try {
+                Thread.sleep(3);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        zombieHombre.moverZombieHombre(e);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }

@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Zombie {
@@ -7,10 +8,12 @@ public class Zombie {
     //==================================================================================================================
     private final int TAMANYO_ZOMBIE = 40;
     private int x, y;
-    private int velocidad; // desplazamiento del zombie
+    private int velocidad = 20; // desplazamiento del zombie
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
     private int spriteActual = 0; // indice del sprite actual (fotograma)
     private Sexo sexo;
+    private Laberinto laberinto = new Laberinto();
+
 
 
     // CONSTRUCTORES
@@ -75,6 +78,59 @@ public class Zombie {
 
     public void actualizarAnimacion() {
         spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
+    }
+
+    public void moverZombieHombre(KeyEvent evento){
+        int [][] lab = laberinto.crearLaberinto();
+
+        if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
+            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())-1] != 1) {
+                x = x - velocidad;
+            }
+        }
+
+        if(evento.getKeyCode() == KeyEvent.VK_RIGHT) {
+            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())+1] != 1) {
+                x = x + velocidad;
+            }
+        }
+        if(evento.getKeyCode() == KeyEvent.VK_UP) {
+            if(lab[(y/laberinto.getAltoBloque())-1][x/laberinto.getAnchoBloque()] != 1) {
+                y = y - velocidad;
+            }
+        }
+        if(evento.getKeyCode() == KeyEvent.VK_DOWN) {
+            if(lab[(y/laberinto.getAltoBloque())+1][x/laberinto.getAnchoBloque()] != 1) {
+                y = y + velocidad;
+            }
+        }
+
+    }
+
+    public void moverZombieFemenino(KeyEvent evento){
+        int [][] lab = laberinto.crearLaberinto();
+
+        if(evento.getKeyCode() == KeyEvent.VK_A) {
+            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())-1] != 1) {
+                x = x - velocidad;
+            }
+        }
+
+        if(evento.getKeyCode() == KeyEvent.VK_D) {
+            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())+1] != 1) {
+                x = x + velocidad;
+            }
+        }
+        if(evento.getKeyCode() == KeyEvent.VK_W) {
+            if(lab[(y/laberinto.getAltoBloque())-1][x/laberinto.getAnchoBloque()] != 1) {
+                y = y - velocidad;
+            }
+        }
+        if(evento.getKeyCode() == KeyEvent.VK_S) {
+            if(lab[(y/laberinto.getAltoBloque())+1][x/laberinto.getAnchoBloque()] != 1) {
+                y = y + velocidad;
+            }
+        }
     }
 
     // METODOS SETTERS & GETTERS
