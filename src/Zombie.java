@@ -81,54 +81,64 @@ public class Zombie {
     }
 
     public void moverZombieHombre(KeyEvent evento){
-        int [][] lab = laberinto.crearLaberinto();
+        int[][] lab = laberinto.crearLaberinto();
+        int keyCode = evento.getKeyCode();
+        int nuevoX = x;
+        int nuevoY = y;
 
-        if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())-1] != 1) {
-                x = x - velocidad;
-            }
+        if (keyCode == KeyEvent.VK_LEFT) {
+            nuevoX -= velocidad;
+        }
+        if (keyCode == KeyEvent.VK_RIGHT) {
+            nuevoX += velocidad;
+        }
+        if (keyCode == KeyEvent.VK_UP) {
+            nuevoY -= velocidad;
+        }
+        if (keyCode == KeyEvent.VK_DOWN) {
+            nuevoY += velocidad;
         }
 
-        if(evento.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())+1] != 1) {
-                x = x + velocidad;
-            }
-        }
-        if(evento.getKeyCode() == KeyEvent.VK_UP) {
-            if(lab[(y/laberinto.getAltoBloque())-1][x/laberinto.getAnchoBloque()] != 1) {
-                y = y - velocidad;
-            }
-        }
-        if(evento.getKeyCode() == KeyEvent.VK_DOWN) {
-            if(lab[(y/laberinto.getAltoBloque())+1][x/laberinto.getAnchoBloque()] != 1) {
-                y = y + velocidad;
+        int bloqueX = nuevoX / laberinto.getAnchoBloque();
+        int bloqueY = nuevoY / laberinto.getAltoBloque();
+
+        // Verificar que los nuevos índices están dentro de los límites del array
+        if (bloqueX >= 0 && bloqueX < lab[0].length && bloqueY >= 0 && bloqueY < lab.length) {
+            if (lab[bloqueY][bloqueX] != 1) {
+                x = nuevoX;
+                y = nuevoY;
             }
         }
 
     }
 
     public void moverZombieFemenino(KeyEvent evento){
-        int [][] lab = laberinto.crearLaberinto();
+        int[][] lab = laberinto.crearLaberinto();
+        int keyCode = evento.getKeyCode();
+        int nuevoX = x;
+        int nuevoY = y;
 
-        if(evento.getKeyCode() == KeyEvent.VK_A) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())-1] != 1) {
-                x = x - velocidad;
-            }
+        if (keyCode == KeyEvent.VK_A) {
+            nuevoX -= velocidad;
+        }
+        if (keyCode == KeyEvent.VK_D) {
+            nuevoX += velocidad;
+        }
+        if (keyCode == KeyEvent.VK_W) {
+            nuevoY -= velocidad;
+        }
+        if (keyCode == KeyEvent.VK_S) {
+            nuevoY += velocidad;
         }
 
-        if(evento.getKeyCode() == KeyEvent.VK_D) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())+1] != 1) {
-                x = x + velocidad;
-            }
-        }
-        if(evento.getKeyCode() == KeyEvent.VK_W) {
-            if(lab[(y/laberinto.getAltoBloque())-1][x/laberinto.getAnchoBloque()] != 1) {
-                y = y - velocidad;
-            }
-        }
-        if(evento.getKeyCode() == KeyEvent.VK_S) {
-            if(lab[(y/laberinto.getAltoBloque())+1][x/laberinto.getAnchoBloque()] != 1) {
-                y = y + velocidad;
+        int bloqueX = nuevoX / laberinto.getAnchoBloque();
+        int bloqueY = nuevoY / laberinto.getAltoBloque();
+
+        // Verificar que los nuevos índices están dentro de los límites del array
+        if (bloqueX >= 0 && bloqueX < lab[0].length && bloqueY >= 0 && bloqueY < lab.length) {
+            if (lab[bloqueY][bloqueX] != 1) {
+                x = nuevoX;
+                y = nuevoY;
             }
         }
     }

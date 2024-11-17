@@ -21,9 +21,9 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
-    private Timer timer;
+    private Timer timer;// un unico timer sobre todos los elementos del tablero
 
-    private Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);// un unico timer sobre todos los elementos del tablero
+    private Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
 
 
     // CONSTRUCTORES
@@ -32,6 +32,9 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
         // propiedades del tablero
         this.setSize(ANCHO, ALTO);
         this.setBackground(Color.DARK_GRAY);
+
+        this.addKeyListener(this);
+        setFocusable(true);
 
         // creacion de los elementos (personajes, calabazas y pocion)
         crearLaberinto();
@@ -176,17 +179,6 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
         }
     }
 
-    public void repintarZombies() {
-        while(true) {
-            repaint();
-            try {
-                Thread.sleep(3);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -196,6 +188,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         zombieHombre.moverZombieHombre(e);
+        repaint();
     }
 
     @Override
