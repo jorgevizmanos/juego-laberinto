@@ -80,6 +80,7 @@ public class Zombie {
         spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
     }
 
+    //movimiente de el zombie hombre
     public void moverZombieHombre(KeyEvent evento){
         int[][] lab = laberinto.crearLaberinto();
         int keyCode = evento.getKeyCode();
@@ -112,6 +113,7 @@ public class Zombie {
 
     }
 
+    //movimiente de el zombie mujer
     public void moverZombieFemenino(KeyEvent evento){
         int[][] lab = laberinto.crearLaberinto();
         int keyCode = evento.getKeyCode();

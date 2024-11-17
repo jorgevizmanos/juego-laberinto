@@ -24,6 +24,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     private Timer timer;// un unico timer sobre todos los elementos del tablero
 
     private Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
+    private Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
 
 
     // CONSTRUCTORES
@@ -109,7 +110,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     // ZOMBIES
     private void crearZombies() {
         //Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
-        Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
+        //Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
         zombies.add(zombieHombre);
         zombies.add(zombieMujer);
     }
@@ -188,6 +189,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         zombieHombre.moverZombieHombre(e);
+        zombieMujer.moverZombieFemenino(e);
         repaint();
     }
 
