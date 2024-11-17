@@ -11,8 +11,8 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
     // ATRIBUTOS
     //==================================================================================================================
-    private static final int ALTO = 700;
-    private static final int ANCHO = 700;
+    private final int ALTO = 700;
+    private final int ANCHO = 700;
     private int arrayLaberinto[][];
 
     private Laberinto laberinto = new Laberinto();
@@ -21,10 +21,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
-    private Timer timer;// un unico timer sobre todos los elementos del tablero
-
-    private Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
-    private Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
+    protected Timer timer;// un unico timer sobre todos los elementos del tablero
 
 
     // CONSTRUCTORES
@@ -109,8 +106,8 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
     // ZOMBIES
     private void crearZombies() {
-        //Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
-        //Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
+        Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
+        Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
         zombies.add(zombieHombre);
         zombies.add(zombieMujer);
     }
@@ -132,7 +129,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
         Zombie zombie2 = zombies.get(1);
         int zombieX2 = mitadBloque - mitadZombieX;
         int zombieY2 = mitadBloque - mitadZombieY;
-        zombie2.setX(zombieX2 + (26 * anchoBloque)); // 26 bloques a la derecha
+        zombie2.setX(zombieX2 + (18 * anchoBloque)); // 26 bloques a la derecha
         zombie2.setY(zombieY2 + anchoBloque);
     }
 
@@ -149,32 +146,31 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
             boolean posicionValida = false;
 
             while (!posicionValida) {
-                int gridX = random.nextInt(28);
-                int gridY = random.nextInt(28);
+                int gridX = random.nextInt(20); // Cambiado de 28 a 20
+                int gridY = random.nextInt(20); // Cambiado de 28 a 20
 
                 if (arrayLaberinto[gridY][gridX] == 0) {
-                    calabaza.setX(gridX * 25);
-                    calabaza.setY(gridY * 25 );
+                    calabaza.setX(gridX * laberinto.getAnchoBloque()); // Usar 35 en lugar de 25
+                    calabaza.setY(gridY * laberinto.getAltoBloque());  // Usar 35 en lugar de 25
                     posicionValida = true;
                 }
             }
         }
     }
 
-    // POCION
     public void iniciarPosicionRandomPocion() {
         boolean posicionValida = false;
 
         while (!posicionValida) {
             // Obtener posición aleatoria en el grid
-            int gridX = random.nextInt(28); // numeroColumna
-            int gridY = random.nextInt(28); // numeroFila
+            int gridX = random.nextInt(20); // Cambiado de 28 a 20
+            int gridY = random.nextInt(20); // Cambiado de 28 a 20
 
             // Verificar si es pasillo (0)
             if (arrayLaberinto[gridY][gridX] == 0) {
                 // Convertir posición de grid a píxeles
-                pocion.setX(gridX * 25); // anchoBloque
-                pocion.setY(gridY * 25); // altoBloque
+                pocion.setX(gridX * laberinto.getAnchoBloque()); // Usar 35 en lugar de 25
+                pocion.setY(gridY * laberinto.getAltoBloque());  // Usar 35 en lugar de 25
                 posicionValida = true;
             }
         }
@@ -188,8 +184,8 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        zombieHombre.moverZombieHombre(e);
-        zombieMujer.moverZombieFemenino(e);
+        zombies.get(0).moverZombieHombre(e);
+        zombies.get(1).moverZombieFemenino(e);
         repaint();
     }
 
