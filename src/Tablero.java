@@ -13,7 +13,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     //==================================================================================================================
     private final int ALTO = 700;
     private final int ANCHO = 700;
-    private int arrayLaberinto[][];
+    private int arrayLaberinto[][]; //
 
     private Laberinto laberinto = new Laberinto();
     private ArrayList<Zombie> zombies = new ArrayList<>();

@@ -12,7 +12,7 @@ public class Zombie {
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
     private int spriteActual = 0; // indice del sprite actual (fotograma)
     private Sexo sexo;
-    private Laberinto laberinto = new Laberinto();
+    private Laberinto laberinto = new Laberinto(); //
 
 
 

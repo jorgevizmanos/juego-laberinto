@@ -5,7 +5,7 @@ public class Laberinto {
     // ATRIBUTOS
     //==================================================================================================================
     private int anchoBloque = 35;
-    private int altoBloque = 35;
+    private int altoBloque = 35; //
 
     // ancho panel / ancho bloque y viceversa 700/x = ancho  700/y = alto
     private int numeroColumna = 20;

@@ -4,7 +4,7 @@ import java.awt.*;
 public class Ventana extends JFrame {
     // ATRIBUTOS
     //==================================================================================================================
-    private Tablero tablero = new Tablero();
+    private Tablero tablero = new Tablero(); //
 
     // CONSTRUCTORES
     //==================================================================================================================

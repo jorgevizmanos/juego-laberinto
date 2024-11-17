@@ -9,7 +9,7 @@ public class Calabaza extends ObjetosMagicos {
     private int x, y; // posicion coordenadas
     private int velocidad = 3; // desplazamiento
 
-    private Laberinto laberinto = new Laberinto();
+    private Laberinto laberinto = new Laberinto(); //
     private Image imagen;
 
     // CONSTRUCTORES
