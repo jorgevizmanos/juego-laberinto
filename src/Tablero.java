@@ -50,27 +50,24 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     //==================================================================================================================
     public void iniciarTimer() {
         timer = new Timer(40, this); // 'this' es la implementacion ActionListener en esta clase
-                                                    // y su metodo actionPerfomed()
+        // y su metodo actionPerfomed()
         timer.start();
     }
 
     // ACTION PERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
-        // POR AHORA iniciamos sprites/animacion de los zombies.
-        // DEBEREMOS DE ACTUALIZAR LA ANIMACION EN EL KeyPressed TRAS IMPLEMENTAR KEYLISTENER... PERO POR AHORA lo dejamos aqui
-//        for (Zombie zombie : zombies) {
-//            zombie.actualizarAnimacion();
-//        }
 
-        // actualizar movimientos de las calabazas
+        // movemos calabazas de lado a lado
         for (Calabaza calabaza : calabazas) {
             calabaza.moverCalabaza(arrayLaberinto);
         }
 
-        // actualizar posiciones de los personajes
-
         // detecar colisiones
+        if (zombies.get(0).limites.intersects(pocion.limites)) {
+            pocion.desaparecer();
+            zombies.get(0).setVelocidad(35);
+        }
 
         // actualizar el tiempo (para imprimirlo por pantalla)
 
@@ -163,14 +160,14 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
         while (!posicionValida) {
             // Obtener posición aleatoria en el grid
-            int gridX = random.nextInt(20); // Cambiado de 28 a 20
-            int gridY = random.nextInt(20); // Cambiado de 28 a 20
+            int gridX = random.nextInt(20);
+            int gridY = random.nextInt(20);
 
             // Verificar si es pasillo (0)
             if (arrayLaberinto[gridY][gridX] == 0) {
                 // Convertir posición de grid a píxeles
-                pocion.setX(gridX * laberinto.getAnchoBloque()); // Usar 35 en lugar de 25
-                pocion.setY(gridY * laberinto.getAltoBloque());  // Usar 35 en lugar de 25
+                pocion.setX(gridX * laberinto.getAnchoBloque());
+                pocion.setY(gridY * laberinto.getAltoBloque());
                 posicionValida = true;
             }
         }

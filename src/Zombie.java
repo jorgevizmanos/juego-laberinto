@@ -8,10 +8,11 @@ public class Zombie {
     //==================================================================================================================
     private final int TAMANYO_ZOMBIE = 35; // MISMO QUE TAMNYO BLOQUE LAB
     private int x, y;
-    private int velocidad = 35; // desplazamiento del zombie MISMO QUE TAMNYO BLOQUE LAB
+    private int velocidad = 15; // desplazamiento del zombie MISMO QUE TAMNYO BLOQUE LAB
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
     private int spriteActual = 0; // indice del sprite actual (fotograma)
     private Sexo sexo;
+    protected Rectangle limites = new Rectangle(x, y, TAMANYO_ZOMBIE, TAMANYO_ZOMBIE);;
 
 
     // CONSTRUCTORES
@@ -19,6 +20,7 @@ public class Zombie {
     public Zombie(Sexo sexo, Component observer) { // observer necesitado para inicializar sprites
         this.sexo = sexo;
         this.animacion = new ArrayList<>();
+        this.limites = new Rectangle(0, 0, TAMANYO_ZOMBIE, TAMANYO_ZOMBIE); // limites se actualizan en metodos de mover (conforme se mueve zombie)
         inicializarSprites(observer); // cargamos recursos sprites PERO la animacion debe ser actualizada en actionPerformed() de Tablero
     }
 
@@ -60,16 +62,16 @@ public class Zombie {
 
             if (reflejado) {
                 // reflejamos horizontalmente la imagen
-                g2d.drawImage(spriteActual, x + getTamanyo(), y, -getTamanyo(), getTamanyo(),observer); // width inverso
+                g2d.drawImage(spriteActual, x + getTamanyo(), y, -getTamanyo(), getTamanyo(), observer); // width inverso
 
                 g2d.setColor(Color.RED); // BORRAR MAS ADELANTE
-                g2d.drawRect(x,y,getTamanyo(),getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
+                g2d.drawRect(x, y, getTamanyo(), getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
             } else {
                 // dibujo sin reflejo
                 g2d.drawImage(spriteActual, x, y, getTamanyo(), getTamanyo(), observer);
 
                 g2d.setColor(Color.RED); // BORRAR MAS ADELANTE
-                g2d.drawRect(x,y,getTamanyo(),getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
+                g2d.drawRect(x, y, getTamanyo(), getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
             }
         }
     }
@@ -78,55 +80,89 @@ public class Zombie {
         spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
     }
 
-    public void moverZombieHombre(KeyEvent evento, Laberinto laberinto){
-        int [][] lab = laberinto.crearLaberinto();
+    public void moverZombieHombre(KeyEvent evento, Laberinto laberinto) {
+        int[][] lab = laberinto.crearLaberinto();
+        int movimiento = velocidad; // La distancia a mover en este turno
+        int nuevoX = x;
+        int nuevoY = y;
 
-        if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())-1] != 1) {
-                x = x - velocidad;
-            }
-        }
+        while (movimiento > 0) {
+            int paso = Math.min(5, movimiento); // Mueve en pasos de 5 píxeles
 
-        if(evento.getKeyCode() == KeyEvent.VK_RIGHT) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())+1] != 1) {
-                x = x + velocidad;
+            if (evento.getKeyCode() == KeyEvent.VK_LEFT) {
+                nuevoX -= paso;
+            } else if (evento.getKeyCode() == KeyEvent.VK_RIGHT) {
+                nuevoX += paso;
+            } else if (evento.getKeyCode() == KeyEvent.VK_UP) {
+                nuevoY -= paso;
+            } else if (evento.getKeyCode() == KeyEvent.VK_DOWN) {
+                nuevoY += paso;
             }
-        }
-        if(evento.getKeyCode() == KeyEvent.VK_UP) {
-            if(lab[(y/laberinto.getAltoBloque())-1][x/laberinto.getAnchoBloque()] != 1) {
-                y = y - velocidad;
-            }
-        }
-        if(evento.getKeyCode() == KeyEvent.VK_DOWN) {
-            if(lab[(y/laberinto.getAltoBloque())+1][x/laberinto.getAnchoBloque()] != 1) {
-                y = y + velocidad;
-            }
-        }
 
+            if (hayColision(nuevoX, nuevoY, laberinto)) {
+                break; // Detener el movimiento si hay colisión
+            }
+
+            // Actualizar la posición
+            x = nuevoX;
+            y = nuevoY;
+            this.limites.x = x;
+            this.limites.y = y;
+
+            movimiento -= paso; // Reducir la distancia restante a mover
+        }
     }
 
-    public void moverZombieFemenino(KeyEvent evento, Laberinto laberinto){
-        int [][] lab = laberinto.crearLaberinto();
 
-        if(evento.getKeyCode() == KeyEvent.VK_A) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())-1] != 1) {
+
+    private boolean hayColision(int nuevoX, int nuevoY, Laberinto laberinto) {
+        int[][] lab = laberinto.crearLaberinto();
+        int anchoBloque = laberinto.getAnchoBloque();
+        int altoBloque = laberinto.getAltoBloque();
+        Rectangle zombieRect = new Rectangle(nuevoX, nuevoY, TAMANYO_ZOMBIE, TAMANYO_ZOMBIE);
+
+        for (int fila = 0; fila < lab.length; fila++) {
+            for (int col = 0; col < lab[0].length; col++) {
+                if (lab[fila][col] == 1) {
+                    Rectangle bloqueRect = new Rectangle(col * anchoBloque, fila * altoBloque, anchoBloque, altoBloque);
+                    if (zombieRect.intersects(bloqueRect)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+    public void moverZombieFemenino(KeyEvent evento, Laberinto laberinto) {
+        int[][] lab = laberinto.crearLaberinto();
+
+        if (evento.getKeyCode() == KeyEvent.VK_A) {
+            if (lab[y / laberinto.getAltoBloque()][(x / laberinto.getAnchoBloque()) - 1] != 1) {
                 x = x - velocidad;
+                this.limites.x = x;
             }
         }
 
-        if(evento.getKeyCode() == KeyEvent.VK_D) {
-            if(lab[y/laberinto.getAltoBloque()][(x/laberinto.getAnchoBloque())+1] != 1) {
+        if (evento.getKeyCode() == KeyEvent.VK_D) {
+            if (lab[y / laberinto.getAltoBloque()][(x / laberinto.getAnchoBloque()) + 1] != 1) {
                 x = x + velocidad;
+                this.limites.x = x;
             }
         }
-        if(evento.getKeyCode() == KeyEvent.VK_W) {
-            if(lab[(y/laberinto.getAltoBloque())-1][x/laberinto.getAnchoBloque()] != 1) {
+        if (evento.getKeyCode() == KeyEvent.VK_W) {
+            if (lab[(y / laberinto.getAltoBloque()) - 1][x / laberinto.getAnchoBloque()] != 1) {
                 y = y - velocidad;
+                this.limites.y = y;
             }
         }
-        if(evento.getKeyCode() == KeyEvent.VK_S) {
-            if(lab[(y/laberinto.getAltoBloque())+1][x/laberinto.getAnchoBloque()] != 1) {
+        if (evento.getKeyCode() == KeyEvent.VK_S) {
+            if (lab[(y / laberinto.getAltoBloque()) + 1][x / laberinto.getAnchoBloque()] != 1) {
                 y = y + velocidad;
+                this.limites.y = y;
             }
         }
     }

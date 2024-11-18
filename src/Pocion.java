@@ -7,10 +7,12 @@ public class Pocion extends ObjetosMagicos{
     private final int TAMANIO_POCION = 25;
     private int x, y;
     private Image imagen;
+    protected Rectangle limites = new Rectangle(x, y, TAMANIO_POCION, TAMANIO_POCION);
 
     // CONSTRUCTORES
     //==================================================================================================================
     public Pocion() {
+        this.limites = new Rectangle(0, 0, TAMANIO_POCION, TAMANIO_POCION); // X e Y se actualizan en Setters
         try {
             this.imagen = new ImageIcon(getClass().getResource("/imagenes/pocion.png")).getImage();
         } catch (Exception e) {
@@ -24,7 +26,9 @@ public class Pocion extends ObjetosMagicos{
     //==================================================================================================================
     @Override
     public void desaparecer() {
-
+        this.imagen = null;
+        this.limites.x = 0;
+        this.limites.y = 0;
     }
 
     @Override
@@ -40,9 +44,6 @@ public class Pocion extends ObjetosMagicos{
 
             g.drawImage(imagen, x, y, TAMANIO_POCION, TAMANIO_POCION, null);
 
-        } else {
-            g.setColor(Color.red);
-            g.fillOval(x, y, 20, 20);
         }
     }
 
@@ -52,6 +53,7 @@ public class Pocion extends ObjetosMagicos{
 
     public void setX(int x) {
         this.x = x;
+        this.limites.x = x;
     }
 
     public int getY() {
@@ -60,5 +62,6 @@ public class Pocion extends ObjetosMagicos{
 
     public void setY(int y) {
         this.y = y;
+        this.limites.y = y;
     }
 }
