@@ -6,14 +6,12 @@ import java.util.ArrayList;
 public class Zombie {
     // ATRIBUTOS
     //==================================================================================================================
-    private final int TAMANYO_ZOMBIE = 35;
+    private final int TAMANYO_ZOMBIE = 35; // MISMO QUE TAMNYO BLOQUE LAB
     private int x, y;
-    private int velocidad = 35; // desplazamiento del zombie
+    private int velocidad = 35; // desplazamiento del zombie MISMO QUE TAMNYO BLOQUE LAB
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
     private int spriteActual = 0; // indice del sprite actual (fotograma)
     private Sexo sexo;
-    private Laberinto laberinto = new Laberinto();
-
 
 
     // CONSTRUCTORES
@@ -80,7 +78,7 @@ public class Zombie {
         spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
     }
 
-    public void moverZombieHombre(KeyEvent evento){
+    public void moverZombieHombre(KeyEvent evento, Laberinto laberinto){
         int [][] lab = laberinto.crearLaberinto();
 
         if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -107,7 +105,7 @@ public class Zombie {
 
     }
 
-    public void moverZombieFemenino(KeyEvent evento){
+    public void moverZombieFemenino(KeyEvent evento, Laberinto laberinto){
         int [][] lab = laberinto.crearLaberinto();
 
         if(evento.getKeyCode() == KeyEvent.VK_A) {

@@ -59,9 +59,9 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     public void actionPerformed(ActionEvent e) {
         // POR AHORA iniciamos sprites/animacion de los zombies.
         // DEBEREMOS DE ACTUALIZAR LA ANIMACION EN EL KeyPressed TRAS IMPLEMENTAR KEYLISTENER... PERO POR AHORA lo dejamos aqui
-        for (Zombie zombie : zombies) {
-            zombie.actualizarAnimacion();
-        }
+//        for (Zombie zombie : zombies) {
+//            zombie.actualizarAnimacion();
+//        }
 
         // actualizar movimientos de las calabazas
         for (Calabaza calabaza : calabazas) {
@@ -184,8 +184,11 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        zombies.get(0).moverZombieHombre(e);
-        zombies.get(1).moverZombieFemenino(e);
+        zombies.get(0).moverZombieHombre(e, laberinto);
+        zombies.get(1).moverZombieFemenino(e, laberinto);
+        for (Zombie zombie : zombies) {
+            zombie.actualizarAnimacion();
+        }
         repaint();
     }
 

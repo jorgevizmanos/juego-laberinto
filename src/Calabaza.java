@@ -5,7 +5,7 @@ public class Calabaza extends ObjetosMagicos {
 
     // ATRIBUTOS
     //==================================================================================================================
-    private static final int TAMANIO_CALABAZA = 25;  // declaramos el tamanyo como constante
+    private final int TAMANIO_CALABAZA = 25;  // declaramos el tamanyo como constante
     private int x, y; // posicion coordenadas
     private int velocidad = 3; // desplazamiento
 
@@ -17,11 +17,11 @@ public class Calabaza extends ObjetosMagicos {
     public Calabaza() {
         // cargamos la imagen de la calabaza una vez solo, en el constructor (para evitar errores con el repaint() )
         try {
-            imagen = new ImageIcon(getClass().getResource("/imagenes/calabaza.png")).getImage();
+            this.imagen = new ImageIcon(getClass().getResource("/imagenes/calabaza.png")).getImage();
         } catch (Exception e) {
             System.out.println("Error al cargar la imagen de la calabaza: " + e.getMessage());
             // Si falla la carga, dibujamos un círculo naranja como respaldo
-            imagen = null;
+            this.imagen = null;
         }
     }
 
@@ -41,8 +41,8 @@ public class Calabaza extends ObjetosMagicos {
     @Override
     public void pintar(Graphics g) {
         if (imagen != null) {
-            g.setColor(Color.RED); // BORRAR AL FINAL
-            g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BORRAR AL FINAL
+            g.setColor(Color.RED); // BBX BORRAR AL FINAL
+            g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BBX BORRAR AL FINAL
 
             g.drawImage(imagen, x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA, null);
         } else {
@@ -97,7 +97,7 @@ public class Calabaza extends ObjetosMagicos {
     public void setY(int y) {
         this.y = y;
     }
-    public static int getTAMANIO_CALABAZA() {
+    public int getTAMANIO_CALABAZA() {
         return TAMANIO_CALABAZA;
     }
 }
