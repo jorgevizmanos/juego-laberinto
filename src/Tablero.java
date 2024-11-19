@@ -7,7 +7,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Tablero extends JPanel implements ActionListener , KeyListener {
+public class Tablero extends JPanel implements ActionListener, KeyListener {
 
     // ATRIBUTOS
     //==================================================================================================================
@@ -21,8 +21,11 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
-    protected Timer timer;// un unico timer sobre todos los elementos del tablero
+    protected Timer timer; // un único timer sobre todos los elementos del tablero
 
+    // creamos el temporizador
+    private int segundos = 20;
+    protected Timer cronometro;
 
     // CONSTRUCTORES
     //==================================================================================================================
@@ -34,24 +37,35 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
         this.addKeyListener(this);
         setFocusable(true);
 
-        // creacion de los elementos (personajes, calabazas y pocion)
+        // creación de los elementos (personajes, calabazas y poción)
         crearLaberinto();
         crearZombies(); // 2 zombies
         crearCalabazas(); // 5 calabazas
 
-        // inicializacion de los elementos del tablero y el timer
+        // inicialización de los elementos del tablero y el timer
         iniciarPosicionZombies();
         iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();
         iniciarTimer();
     }
 
-    // METODOS
+    // MÉTODOS
     //==================================================================================================================
     public void iniciarTimer() {
-        timer = new Timer(40, this); // 'this' es la implementacion ActionListener en esta clase
-        // y su metodo actionPerfomed()
+        timer = new Timer(40, this); // 'this' es la implementación ActionListener en esta clase
+        // y su método actionPerformed()
         timer.start();
+        cronometro = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                segundos--;
+                if (segundos <= 0) {
+                    System.out.println("aquí va el panel de game over");
+                    cronometro.stop();
+                }
+            }
+        });
+        cronometro.start();
     }
 
     // ACTION PERFORMED
@@ -63,11 +77,11 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
             calabaza.moverCalabaza(laberinto);
         }
 
-        // detecar colisiones
+        // detectar colisiones
         Zombie zombieHombre = zombies.get(0);
         Zombie zombieMujer = zombies.get(1);
 
-        // con pocion
+        // con poción
         if (zombieHombre.limites.intersects(pocion.limites)) {
             pocion.desaparecer();
             zombieHombre.setVelocidad(25);
@@ -93,7 +107,7 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
         // actualizar el tiempo (para imprimirlo por pantalla)
 
-        // comprobar estado del juego (si ha ganado algun jugador o si ha terminado el tiempo)
+        // comprobar estado del juego (si ha ganado algún jugador o si ha terminado el tiempo)
 
         repaint(); // CRUCIAL!!!!!
     }
@@ -109,13 +123,15 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
         zombies.get(0).pintar(g, this, false);
         zombies.get(1).pintar(g, this, true);
 
-
-        for (Calabaza calabaza : calabazas) { // pintamos calabazas: recorremos su ArrayList de 5 calbazas para ello
+        for (Calabaza calabaza : calabazas) { // pintamos calabazas: recorremos su ArrayList de 5 calabazas para ello
             calabaza.pintar(g2d);
         }
 
-        pocion.pintar(g2d); // pintamos pocion
+        pocion.pintar(g2d); // pintamos poción
 
+        // Pintar el cronómetro debajo del laberinto
+        g2d.setColor(Color.WHITE);
+        g2d.drawString("Tiempo restante: " + segundos, 10, ALTO - 10);
     }
 
     // LABERINTO
@@ -137,8 +153,8 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
         // zombie 1 (esquina superior izquierda)
         Zombie zombie1 = zombies.get(0);
-        int mitadZombieX = zombie1.getTamanyo()/2;
-        int mitadZombieY = zombie1.getTamanyo()/2;
+        int mitadZombieX = zombie1.getTamanyo() / 2;
+        int mitadZombieY = zombie1.getTamanyo() / 2;
         int zombieX1 = mitadBloque - mitadZombieX;
         int zombieY1 = mitadBloque - mitadZombieY;
         zombie1.setX(zombieX1 + anchoBloque);
@@ -194,7 +210,6 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
             }
         }
     }
-
 
     @Override
     public void keyTyped(KeyEvent e) {
