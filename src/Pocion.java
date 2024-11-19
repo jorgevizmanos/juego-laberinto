@@ -7,7 +7,7 @@ public class Pocion extends ObjetosMagicos{
     private final int TAMANIO_POCION = 25;
     private int x, y;
     private Image imagen;
-    protected Rectangle limites = new Rectangle(x, y, TAMANIO_POCION, TAMANIO_POCION);
+    protected Rectangle limites;
 
     // CONSTRUCTORES
     //==================================================================================================================

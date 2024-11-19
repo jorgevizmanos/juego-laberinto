@@ -8,13 +8,13 @@ public class Calabaza extends ObjetosMagicos {
     private final int TAMANIO_CALABAZA = 25;  // declaramos el tamanyo como constante
     private int x, y; // posicion coordenadas
     private int velocidad = 3; // desplazamiento
-
-    private Laberinto laberinto = new Laberinto();
     private Image imagen;
+    protected Rectangle limites;
 
     // CONSTRUCTORES
     //==================================================================================================================
     public Calabaza() {
+        this.limites = new Rectangle(0,0, TAMANIO_CALABAZA, TAMANIO_CALABAZA);
         // cargamos la imagen de la calabaza una vez solo, en el constructor (para evitar errores con el repaint() )
         try {
             this.imagen = new ImageIcon(getClass().getResource("/imagenes/calabaza.png")).getImage();
@@ -30,7 +30,8 @@ public class Calabaza extends ObjetosMagicos {
 
     @Override
     public void desaparecer() {
-
+        this.imagen = null;
+        this.limites = null;
     }
 
     @Override
@@ -45,15 +46,12 @@ public class Calabaza extends ObjetosMagicos {
             g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BBX BORRAR AL FINAL
 
             g.drawImage(imagen, x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA, null);
-        } else {
-            // Si no se pudo cargar la imagen, dibujamos un círculo naranja
-            g.setColor(Color.ORANGE);
-            g.fillOval(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA);
         }
     }
 
-    public void moverCalabaza(int[][] lab) {
+    public void moverCalabaza(Laberinto laberinto) {
         // calculamos la proxima posicion en X de la calabaza
+        int[][] lab = laberinto.crearLaberinto();
         int proximaPosX = x + velocidad;
 
         // si se desplaza hacia la derecha
@@ -88,6 +86,7 @@ public class Calabaza extends ObjetosMagicos {
 
     public void setX(int x) {
         this.x = x;
+        this.limites.x = x;
     }
 
     public int getY() {
@@ -96,6 +95,7 @@ public class Calabaza extends ObjetosMagicos {
 
     public void setY(int y) {
         this.y = y;
+        this.limites.y = y;
     }
     public int getTAMANIO_CALABAZA() {
         return TAMANIO_CALABAZA;

@@ -60,13 +60,35 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
         // movemos calabazas de lado a lado
         for (Calabaza calabaza : calabazas) {
-            calabaza.moverCalabaza(arrayLaberinto);
+            calabaza.moverCalabaza(laberinto);
         }
 
         // detecar colisiones
-        if (zombies.get(0).limites.intersects(pocion.limites)) {
+        Zombie zombieHombre = zombies.get(0);
+        Zombie zombieMujer = zombies.get(1);
+
+        // con pocion
+        if (zombieHombre.limites.intersects(pocion.limites)) {
             pocion.desaparecer();
-            zombies.get(0).setVelocidad(35);
+            zombieHombre.setVelocidad(25);
+        }
+        if (zombieMujer.limites.intersects(pocion.limites)) {
+            pocion.desaparecer();
+            zombieMujer.setVelocidad(25);
+        }
+
+        // con calabazas
+        Calabaza calabazaAeliminar = null;
+        for (Calabaza calabazaActual : calabazas) {
+            if (zombieHombre.limites.intersects(calabazaActual.limites)) {
+                calabazaAeliminar = calabazaActual;
+                break;
+            }
+        }
+        if (calabazaAeliminar != null) {
+            zombieHombre.setVelocidad(5);
+            calabazaAeliminar.desaparecer();
+            calabazas.remove(calabazaAeliminar);
         }
 
         // actualizar el tiempo (para imprimirlo por pantalla)
@@ -105,8 +127,8 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
     private void crearZombies() {
         Zombie zombieHombre = new Zombie(Sexo.HOMBRE, this);
         Zombie zombieMujer = new Zombie(Sexo.MUJER, this);
-        zombies.add(zombieHombre);
-        zombies.add(zombieMujer);
+        zombies.add(zombieHombre); // [0]
+        zombies.add(zombieMujer); // [1]
     }
 
     private void iniciarPosicionZombies() {
@@ -181,8 +203,11 @@ public class Tablero extends JPanel implements ActionListener , KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        zombies.get(0).moverZombieHombre(e, laberinto);
-        zombies.get(1).moverZombieFemenino(e, laberinto);
+        // mover zombies cuando se presiona tecla
+        zombies.get(0).moverZombie(e, laberinto); // mover hombre
+        zombies.get(1).moverZombie(e, laberinto); // mover mujer
+
+        // actualizar sprites conforme se presiona tecla
         for (Zombie zombie : zombies) {
             zombie.actualizarAnimacion();
         }
