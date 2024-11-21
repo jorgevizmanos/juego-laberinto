@@ -11,57 +11,56 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
 
     // ATRIBUTOS
     //==================================================================================================================
-    private final int ALTO = 700;
     private final int ANCHO = 700;
+    private final int ALTO = 700;
     private int arrayLaberinto[][];
 
     private Laberinto laberinto = new Laberinto();
     private ArrayList<Zombie> zombies = new ArrayList<>();
     private ArrayList<Calabaza> calabazas = new ArrayList<>();
     private Pocion pocion = new Pocion();
+    private Cronometro cronometro;
 
     private Random random = new Random();
-    private Timer animationTimer; // Timer para la animacion del juego
-    private Timer gameTimer; // Timer especifico para el contador
+    private Timer animationTimer;
+    private Timer gameTimer;
 
-    // creamos el temporizador
     private int segundosCronometro = 30;
     private boolean juegoActivo;
 
     // CONSTRUCTORES
     //==================================================================================================================
-    public Tablero() {
-        // propiedades del tablero
-        this.setSize(ANCHO, ALTO);
-        this.setBackground(Color.DARK_GRAY);
+    public Tablero(Cronometro cronometro) {
+        this.cronometro = cronometro;
 
+        this.setSize(ANCHO, ALTO);
+        this.setBackground(Color.pink);
         this.addKeyListener(this);
         this.setFocusable(true);
-
         this.juegoActivo = true;
 
-        // creacion de los elementos (personajes, calabazas y pocion)
         crearLaberinto();
-        crearZombies(); // 2 zombies
-        crearCalabazas(); // 5 calabazas
+        crearZombies();
+        crearCalabazas();
 
-        // inicialización de los elementos del tablero y los timers
         iniciarPosicionZombies();
         iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();
 
-        // timer para la animacion del juego (50ms)
         this.animationTimer = new Timer(50, this);
         this.animationTimer.start();
 
-        // Timer para el contador (1 segundo)
-        this.gameTimer = new Timer(1000, e -> {
-            if (juegoActivo) {
-                segundosCronometro--;
-                if (segundosCronometro <= 0) {
-                    finalizarJuego();
+        this.gameTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (juegoActivo) {
+                    segundosCronometro--;
+                    if (segundosCronometro <= 0) {
+                        finalizarJuego();
+                    }
+                    cronometro.actualizarTiempo(segundosCronometro);
+                    repaint();
                 }
-                repaint();
             }
         });
         this.gameTimer.start();
@@ -146,9 +145,6 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
 
         pocion.pintar(g2d); // pintamos pocion
 
-        // Pintar el cronometro debajo del laberinto
-        g2d.setColor(Color.WHITE);
-        g2d.drawString("Tiempo restante: " + segundosCronometro, 10, ALTO - 10);
     }
 
     // LABERINTO

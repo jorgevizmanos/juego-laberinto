@@ -1,14 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelCronometro extends JPanel {
+public class Cronometro extends JPanel {
     private int segundos;
     private JLabel tiempoLabel;
 
-    public PanelCronometro() {
-        this.setPreferredSize(new Dimension(700, 100));
+    public Cronometro() {
         this.setBackground(Color.BLACK);
-
+        this.setSize(700,150);
         tiempoLabel = new JLabel("Tiempo: 30");
         tiempoLabel.setForeground(Color.WHITE);
         tiempoLabel.setFont(new Font("Arial", Font.BOLD, 24));
