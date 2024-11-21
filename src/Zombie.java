@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Zombie {
     // ATRIBUTOS
     //==================================================================================================================
-    private final int TAMANYO_ZOMBIE = 33; // MISMO QUE TAMNYO BLOQUE LAB
+    private final int TAMANYO_ZOMBIE = 32; // MISMO QUE TAMNYO BLOQUE LAB
     private int x, y;
     private int velocidad = 10; // desplazamiento del zombie MISMO QUE TAMNYO BLOQUE LAB
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
@@ -158,23 +158,23 @@ public class Zombie {
         return seMovio; // Retornamos si el zombie se movió o no
     }
 
-    // En Zombie.java, modifica el método hayColision
     private boolean hayColision(int nuevoX, int nuevoY, Laberinto laberinto) {
         int[][] lab = laberinto.crearLaberinto();
         int anchoBloque = laberinto.getAnchoBloque();
         int altoBloque = laberinto.getAltoBloque();
 
-        // Puntos a comprobar: las cuatro esquinas del zombie
-        int[] puntosX = {nuevoX, nuevoX + TAMANYO_ZOMBIE - 1};
-        int[] puntosY = {nuevoY, nuevoY + TAMANYO_ZOMBIE - 1};
+        // ajuste para centrar el area de colision del zombie
+        int margen = (TAMANYO_ZOMBIE - 25) / 2;  // Área de colisión más pequeña
+
+        // puntos a comprobar con el margen
+        int[] puntosX = {nuevoX + margen, nuevoX + TAMANYO_ZOMBIE - margen};
+        int[] puntosY = {nuevoY + margen, nuevoY + TAMANYO_ZOMBIE - margen};
 
         for (int px : puntosX) {
             for (int py : puntosY) {
-                // Convertir coordenadas de píxeles a índices del laberinto
                 int filaLab = py / altoBloque;
                 int colLab = px / anchoBloque;
 
-                // Verificar límites y colisiones
                 if (filaLab < 0 || filaLab >= lab.length ||
                         colLab < 0 || colLab >= lab[0].length ||
                         lab[filaLab][colLab] == 1) {
