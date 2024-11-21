@@ -8,6 +8,7 @@ public class Pocion extends ObjetosMagicos{
     private int x, y;
     private Image imagen;
     protected Rectangle limites;
+    private boolean activa = true;
 
     // CONSTRUCTORES
     //==================================================================================================================
@@ -27,8 +28,8 @@ public class Pocion extends ObjetosMagicos{
     @Override
     public void desaparecer() {
         this.imagen = null;
-        this.limites.x = 0;
-        this.limites.y = 0;
+        this.activa = false;
+        this.limites = new Rectangle(0, 0, 0, 0);  // Limites nulos
     }
 
     @Override
@@ -63,5 +64,9 @@ public class Pocion extends ObjetosMagicos{
     public void setY(int y) {
         this.y = y;
         this.limites.y = y;
+    }
+
+    public boolean isActiva() {
+        return activa;
     }
 }

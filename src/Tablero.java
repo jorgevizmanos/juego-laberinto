@@ -90,15 +90,16 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         Zombie zombieMujer = zombies.get(1);
 
         // con pocion
-        if (zombieHombre.limites.intersects(pocion.limites)) {
-            pocion.desaparecer();
-            zombieHombre.setVelocidad(zombieHombre.getVelocidad() + 4);
+        if (pocion.isActiva()) {  // Solo comprobar si la poción está activa
+            if (zombieHombre.limites.intersects(pocion.limites)) {
+                pocion.desaparecer();
+                zombieHombre.setVelocidad(zombieHombre.getVelocidad() + 5);
+            }
+            if (zombieMujer.limites.intersects(pocion.limites)) {
+                pocion.desaparecer();
+                zombieMujer.setVelocidad(zombieMujer.getVelocidad() + 5);
+            }
         }
-        if (zombieMujer.limites.intersects(pocion.limites)) {
-            pocion.desaparecer();
-            zombieMujer.setVelocidad(zombieMujer.getVelocidad() + 4);
-        }
-
         // con calabazas
         Calabaza calabazaAeliminar = null;
         for (Calabaza calabazaActual : calabazas) {
