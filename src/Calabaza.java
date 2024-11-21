@@ -5,7 +5,7 @@ public class Calabaza extends ObjetosMagicos {
 
     // ATRIBUTOS
     //==================================================================================================================
-    private final int TAMANIO_CALABAZA = 25;  // declaramos el tamanyo como constante
+    private final int TAMANIO_CALABAZA = 25;  // tamanyo CONSTANTE
     private int x, y; // posicion coordenadas
     private int velocidad = 3; // desplazamiento
     private Image imagen;
@@ -15,12 +15,15 @@ public class Calabaza extends ObjetosMagicos {
     //==================================================================================================================
     public Calabaza() {
         this.limites = new Rectangle(0,0, TAMANIO_CALABAZA, TAMANIO_CALABAZA);
+
         // cargamos la imagen de la calabaza una vez solo, en el constructor (para evitar errores con el repaint() )
         try {
             this.imagen = new ImageIcon(getClass().getResource("/imagenes/calabaza.png")).getImage();
+
         } catch (Exception e) {
             System.out.println("Error al cargar la imagen de la calabaza: " + e.getMessage());
-            // Si falla la carga, dibujamos un círculo naranja como respaldo
+
+            // si falla la carga, la dejamos a null
             this.imagen = null;
         }
     }
@@ -50,6 +53,8 @@ public class Calabaza extends ObjetosMagicos {
     }
 
     public void moverCalabaza(Laberinto laberinto) {
+
+
         // calculamos la proxima posicion en X de la calabaza
         int[][] lab = laberinto.crearLaberinto();
         int proximaPosX = x + velocidad;
@@ -61,8 +66,9 @@ public class Calabaza extends ObjetosMagicos {
                 velocidad = -velocidad; // invertimos direccion
 
             } else {
-                // si no hay colision, actualizamos la posicion a la nueva para avanzar
+                // si no hay colision, actualizamos la posicion a la nueva para avanzar y sus limites
                 x = proximaPosX;
+                this.limites.x = x;
             }
 
             // en caso de desplazarse hacia la izquierda
@@ -71,9 +77,11 @@ public class Calabaza extends ObjetosMagicos {
             if (lab[y / laberinto.getAltoBloque()][proximaPosX / laberinto.getAnchoBloque()] == 1) {
                 // si hay colision, invertimos la direccion
                 velocidad = -velocidad;
+
             } else {
-                // si no hay colision, actualizamos la posicion a la nueva para avanzar
+                // si no hay colision, actualizamos la posicion a la nueva para avanzar y sus limites
                 x = proximaPosX;
+                this.limites.x = x;
             }
         }
     }

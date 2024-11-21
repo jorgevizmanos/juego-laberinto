@@ -21,11 +21,12 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     private Pocion pocion = new Pocion();
 
     private Random random = new Random();
-    protected Timer timer; // un único timer sobre todos los elementos del tablero
+    private Timer animationTimer; // Timer para la animacion del juego
+    private Timer gameTimer; // Timer especifico para el contador
 
     // creamos el temporizador
-    private int segundos = 20;
-    protected Timer cronometro;
+    private int segundosCronometro = 30;
+    private boolean juegoActivo;
 
     // CONSTRUCTORES
     //==================================================================================================================
@@ -35,42 +36,50 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         this.setBackground(Color.DARK_GRAY);
 
         this.addKeyListener(this);
-        setFocusable(true);
+        this.setFocusable(true);
 
-        // creación de los elementos (personajes, calabazas y poción)
+        this.juegoActivo = true;
+
+        // creacion de los elementos (personajes, calabazas y pocion)
         crearLaberinto();
         crearZombies(); // 2 zombies
         crearCalabazas(); // 5 calabazas
 
-        // inicialización de los elementos del tablero y el timer
+        // inicialización de los elementos del tablero y los timers
         iniciarPosicionZombies();
         iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();
-        iniciarTimer();
-    }
 
-    // MÉTODOS
-    //==================================================================================================================
-    public void iniciarTimer() {
-        timer = new Timer(40, this); // 'this' es la implementación ActionListener en esta clase
-        // y su método actionPerformed()
-        timer.start();
-        cronometro = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                segundos--;
-                if (segundos <= 0) {
-                    System.out.println("aquí va el panel de game over");
-                    cronometro.stop();
+        // timer para la animacion del juego (50ms)
+        this.animationTimer = new Timer(50, this);
+        this.animationTimer.start();
+
+        // Timer para el contador (1 segundo)
+        this.gameTimer = new Timer(1000, e -> {
+            if (juegoActivo) {
+                segundosCronometro--;
+                if (segundosCronometro <= 0) {
+                    finalizarJuego();
                 }
+                repaint();
             }
         });
-        cronometro.start();
+        this.gameTimer.start();
+    }
+
+    // METODOS
+    //==================================================================================================================
+    private void finalizarJuego() {
+        juegoActivo = false;
+        gameTimer.stop();
+        animationTimer.stop();
+        System.out.println("¡GAME OVER!");
     }
 
     // ACTION PERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (!juegoActivo) return;
 
         // movemos calabazas de lado a lado
         for (Calabaza calabaza : calabazas) {
@@ -81,14 +90,14 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         Zombie zombieHombre = zombies.get(0);
         Zombie zombieMujer = zombies.get(1);
 
-        // con poción
+        // con pocion
         if (zombieHombre.limites.intersects(pocion.limites)) {
             pocion.desaparecer();
-            zombieHombre.setVelocidad(25);
+            zombieHombre.setVelocidad(zombieHombre.getVelocidad() + 4);
         }
         if (zombieMujer.limites.intersects(pocion.limites)) {
             pocion.desaparecer();
-            zombieMujer.setVelocidad(25);
+            zombieMujer.setVelocidad(zombieMujer.getVelocidad() + 4);
         }
 
         // con calabazas
@@ -96,20 +105,28 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         for (Calabaza calabazaActual : calabazas) {
             if (zombieHombre.limites.intersects(calabazaActual.limites)) {
                 calabazaAeliminar = calabazaActual;
+                zombieHombre.setVelocidad(zombieHombre.getVelocidad() - 2);
                 break;
             }
         }
+
+        // solo si no hubo colision con zombieHombre
+        if (calabazaAeliminar == null) {
+            for (Calabaza calabazaActual : calabazas) {
+                if (zombieMujer.limites.intersects(calabazaActual.limites)) {
+                    calabazaAeliminar = calabazaActual;
+                    zombieMujer.setVelocidad(zombieMujer.getVelocidad() - 2); // velocidad original = 10 (no podemos restar toda)
+                    break;
+                }
+            }
+        }
+
         if (calabazaAeliminar != null) {
-            zombieHombre.setVelocidad(5);
             calabazaAeliminar.desaparecer();
             calabazas.remove(calabazaAeliminar);
         }
 
-        // actualizar el tiempo (para imprimirlo por pantalla)
-
-        // comprobar estado del juego (si ha ganado algún jugador o si ha terminado el tiempo)
-
-        repaint(); // CRUCIAL!!!!!
+        repaint();
     }
 
     // PINTAR EL TABLERO
@@ -127,11 +144,11 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
             calabaza.pintar(g2d);
         }
 
-        pocion.pintar(g2d); // pintamos poción
+        pocion.pintar(g2d); // pintamos pocion
 
-        // Pintar el cronómetro debajo del laberinto
+        // Pintar el cronometro debajo del laberinto
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Tiempo restante: " + segundos, 10, ALTO - 10);
+        g2d.drawString("Tiempo restante: " + segundosCronometro, 10, ALTO - 10);
     }
 
     // LABERINTO
@@ -164,7 +181,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         Zombie zombie2 = zombies.get(1);
         int zombieX2 = mitadBloque - mitadZombieX;
         int zombieY2 = mitadBloque - mitadZombieY;
-        zombie2.setX(zombieX2 + (18 * anchoBloque)); // 26 bloques a la derecha
+        zombie2.setX(zombieX2 + (18 * anchoBloque));
         zombie2.setY(zombieY2 + anchoBloque);
     }
 
@@ -176,17 +193,16 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     }
 
     public void iniciarPosicionRandomCalabazas() {
-        // inicializar posición para cada calabaza del ArrayList
         for (Calabaza calabaza : calabazas) {
             boolean posicionValida = false;
 
             while (!posicionValida) {
-                int gridX = random.nextInt(20); // Cambiado de 28 a 20
-                int gridY = random.nextInt(20); // Cambiado de 28 a 20
+                int gridX = random.nextInt(20);
+                int gridY = random.nextInt(20);
 
                 if (arrayLaberinto[gridY][gridX] == 0) {
-                    calabaza.setX(gridX * laberinto.getAnchoBloque()); // Usar 35 en lugar de 25
-                    calabaza.setY(gridY * laberinto.getAltoBloque());  // Usar 35 en lugar de 25
+                    calabaza.setX(gridX * laberinto.getAnchoBloque());
+                    calabaza.setY(gridY * laberinto.getAltoBloque());
                     posicionValida = true;
                 }
             }
@@ -197,13 +213,10 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         boolean posicionValida = false;
 
         while (!posicionValida) {
-            // Obtener posición aleatoria en el grid
             int gridX = random.nextInt(20);
             int gridY = random.nextInt(20);
 
-            // Verificar si es pasillo (0)
             if (arrayLaberinto[gridY][gridX] == 0) {
-                // Convertir posición de grid a píxeles
                 pocion.setX(gridX * laberinto.getAnchoBloque());
                 pocion.setY(gridY * laberinto.getAltoBloque());
                 posicionValida = true;
@@ -213,24 +226,24 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // mover zombies cuando se presiona tecla
-        zombies.get(0).moverZombie(e, laberinto); // mover hombre
-        zombies.get(1).moverZombie(e, laberinto); // mover mujer
+        if (!juegoActivo) return;
 
-        // actualizar sprites conforme se presiona tecla
-        for (Zombie zombie : zombies) {
-            zombie.actualizarAnimacion();
+        // mover zombies cuando se presiona tecla y actualizar solo si se movieron
+        if (zombies.get(0).moverZombie(e, laberinto)) {
+            zombies.get(0).actualizarAnimacion();
         }
+        if (zombies.get(1).moverZombie(e, laberinto)) {
+            zombies.get(1).actualizarAnimacion();
+        }
+
         repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
     }
 }

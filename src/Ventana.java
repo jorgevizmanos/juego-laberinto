@@ -19,5 +19,7 @@ public class Ventana extends JFrame {
 
     // METODOS
     //==================================================================================================================
-
+    public static void main(String[] args) {
+        new Ventana();
+    }
 }

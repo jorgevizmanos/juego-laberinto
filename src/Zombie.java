@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Zombie {
     // ATRIBUTOS
     //==================================================================================================================
-    private final int TAMANYO_ZOMBIE = 35; // MISMO QUE TAMNYO BLOQUE LAB
+    private final int TAMANYO_ZOMBIE = 33; // MISMO QUE TAMNYO BLOQUE LAB
     private int x, y;
     private int velocidad = 10; // desplazamiento del zombie MISMO QUE TAMNYO BLOQUE LAB
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
@@ -26,29 +26,32 @@ public class Zombie {
 
     // METODOS
     //==================================================================================================================
-    private void inicializarSprites(Component observer) { // pasamos el oberver, que es 'this' en Tablero
-        // elegimos carpeta de sprites segun el sexo del zombie
+    private void inicializarSprites(Component observer) {
         String carpeta;
         if (sexo == Sexo.HOMBRE) {
-            carpeta = "sprites_zombieM"; // ASI SE LLAMA LA CARPETA DE RECURSOS
+            carpeta = "sprites_zombieM";
         } else {
             carpeta = "sprites_zombieF";
         }
 
-        // recorremos cada imagen dentro de la carpeta de sprites para anyadirlas a la animacion (son 5)
         for (int i = 1; i <= 5; i++) {
             try {
-                String ruta = "imagenes/" + carpeta + "/Walk (" + i + ").png"; // carpeta--> directorio M/H; i--> imagen actual del directorio
-                Image spriteOriginal = new ImageIcon(getClass().getResource(ruta)).getImage(); // volcamos la imagen actual del directorio en variable
+                String ruta = "imagenes/" + carpeta + "/Walk (" + i + ").png";
+                Image spriteOriginal = new ImageIcon(getClass().getResource(ruta)).getImage();
 
-                // ajustamos tamanyo imagen: calculamos la nueva anchura manteniendo la proporcion de la imagen
+                // Forzar carga inmediata
+                MediaTracker tracker = new MediaTracker(observer);
+                tracker.addImage(spriteOriginal, 0);
+                tracker.waitForAll();
+
                 double proporcion = (double) spriteOriginal.getWidth(observer) / spriteOriginal.getHeight(observer);
                 int nuevoAncho = (int) (TAMANYO_ZOMBIE * proporcion);
-
-                // creamos imagen escalada manteniendo proporciones
                 Image spriteEscalado = spriteOriginal.getScaledInstance(nuevoAncho, TAMANYO_ZOMBIE, Image.SCALE_SMOOTH);
-                animacion.add(spriteEscalado);
 
+                tracker.addImage(spriteEscalado, 1);
+                tracker.waitForAll();
+
+                animacion.add(spriteEscalado);
             } catch (Exception e) {
                 System.out.println("Error cargando sprite " + i + ": " + e.getMessage());
             }
@@ -80,83 +83,102 @@ public class Zombie {
         spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
     }
 
-    public void moverZombie(KeyEvent evento, Laberinto laberinto) {
-        int movimiento = velocidad; // La distancia a mover en este turno
+    public boolean moverZombie(KeyEvent evento, Laberinto laberinto) {
+        int movimiento = velocidad;
         int nuevoX = x;
         int nuevoY = y;
+        boolean seMovio = false; // Para saber si el zombie realmente se movió
 
         if (sexo == Sexo.HOMBRE) {
-            while (movimiento > 0) {
-                int paso = Math.min(5, movimiento); // Mueve en pasos de 5 píxeles
+            // Verificar si se presionó alguna tecla del zombie hombre
+            if (evento.getKeyCode() == KeyEvent.VK_LEFT ||
+                    evento.getKeyCode() == KeyEvent.VK_RIGHT ||
+                    evento.getKeyCode() == KeyEvent.VK_UP ||
+                    evento.getKeyCode() == KeyEvent.VK_DOWN) {
 
-                if (evento.getKeyCode() == KeyEvent.VK_LEFT) {
-                    nuevoX -= paso;
-                } else if (evento.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    nuevoX += paso;
-                } else if (evento.getKeyCode() == KeyEvent.VK_UP) {
-                    nuevoY -= paso;
-                } else if (evento.getKeyCode() == KeyEvent.VK_DOWN) {
-                    nuevoY += paso;
+                while (movimiento > 0) {
+                    int paso = Math.min(5, movimiento);
+
+                    if (evento.getKeyCode() == KeyEvent.VK_LEFT) {
+                        nuevoX -= paso;
+                    } else if (evento.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        nuevoX += paso;
+                    } else if (evento.getKeyCode() == KeyEvent.VK_UP) {
+                        nuevoY -= paso;
+                    } else if (evento.getKeyCode() == KeyEvent.VK_DOWN) {
+                        nuevoY += paso;
+                    }
+
+                    if (hayColision(nuevoX, nuevoY, laberinto)) {
+                        break;
+                    }
+
+                    x = nuevoX;
+                    y = nuevoY;
+                    this.limites.x = x;
+                    this.limites.y = y;
+                    seMovio = true;
+                    movimiento -= paso;
                 }
-
-                if (hayColision(nuevoX, nuevoY, laberinto)) {
-                    break; // Detener el movimiento si hay colisión
-                }
-
-                // Actualizar la posición
-                x = nuevoX;
-                y = nuevoY;
-                this.limites.x = x;
-                this.limites.y = y;
-
-                movimiento -= paso; // Reducir la distancia restante a mover
             }
-
-            // en caso de ser MUJER
         } else {
-            while (movimiento > 0) {
-                int paso = Math.min(5, movimiento); // Mueve en pasos de 5 píxeles
+            // Verificar si se presionó alguna tecla de la zombie mujer
+            if (evento.getKeyCode() == KeyEvent.VK_A ||
+                    evento.getKeyCode() == KeyEvent.VK_D ||
+                    evento.getKeyCode() == KeyEvent.VK_W ||
+                    evento.getKeyCode() == KeyEvent.VK_S) {
 
-                if (evento.getKeyCode() == KeyEvent.VK_A) {
-                    nuevoX -= paso;
-                } else if (evento.getKeyCode() == KeyEvent.VK_D) {
-                    nuevoX += paso;
-                } else if (evento.getKeyCode() == KeyEvent.VK_W) {
-                    nuevoY -= paso;
-                } else if (evento.getKeyCode() == KeyEvent.VK_S) {
-                    nuevoY += paso;
+                while (movimiento > 0) {
+                    int paso = Math.min(5, movimiento);
+
+                    if (evento.getKeyCode() == KeyEvent.VK_A) {
+                        nuevoX -= paso;
+                    } else if (evento.getKeyCode() == KeyEvent.VK_D) {
+                        nuevoX += paso;
+                    } else if (evento.getKeyCode() == KeyEvent.VK_W) {
+                        nuevoY -= paso;
+                    } else if (evento.getKeyCode() == KeyEvent.VK_S) {
+                        nuevoY += paso;
+                    }
+
+                    if (hayColision(nuevoX, nuevoY, laberinto)) {
+                        break;
+                    }
+
+                    x = nuevoX;
+                    y = nuevoY;
+                    this.limites.x = x;
+                    this.limites.y = y;
+                    seMovio = true;
+                    movimiento -= paso;
                 }
-
-                if (hayColision(nuevoX, nuevoY, laberinto)) {
-                    break; // Detener el movimiento si hay colisión
-                }
-
-                // Actualizar la posición
-                x = nuevoX;
-                y = nuevoY;
-                this.limites.x = x;
-                this.limites.y = y;
-
-                movimiento -= paso; // Reducir la distancia restante a mover
             }
-
         }
+
+        return seMovio; // Retornamos si el zombie se movió o no
     }
 
-
+    // En Zombie.java, modifica el método hayColision
     private boolean hayColision(int nuevoX, int nuevoY, Laberinto laberinto) {
         int[][] lab = laberinto.crearLaberinto();
         int anchoBloque = laberinto.getAnchoBloque();
         int altoBloque = laberinto.getAltoBloque();
-        Rectangle zombieRect = new Rectangle(nuevoX, nuevoY, TAMANYO_ZOMBIE, TAMANYO_ZOMBIE);
 
-        for (int fila = 0; fila < lab.length; fila++) {
-            for (int col = 0; col < lab[0].length; col++) {
-                if (lab[fila][col] == 1) {
-                    Rectangle bloqueRect = new Rectangle(col * anchoBloque, fila * altoBloque, anchoBloque, altoBloque);
-                    if (zombieRect.intersects(bloqueRect)) {
-                        return true;
-                    }
+        // Puntos a comprobar: las cuatro esquinas del zombie
+        int[] puntosX = {nuevoX, nuevoX + TAMANYO_ZOMBIE - 1};
+        int[] puntosY = {nuevoY, nuevoY + TAMANYO_ZOMBIE - 1};
+
+        for (int px : puntosX) {
+            for (int py : puntosY) {
+                // Convertir coordenadas de píxeles a índices del laberinto
+                int filaLab = py / altoBloque;
+                int colLab = px / anchoBloque;
+
+                // Verificar límites y colisiones
+                if (filaLab < 0 || filaLab >= lab.length ||
+                        colLab < 0 || colLab >= lab[0].length ||
+                        lab[filaLab][colLab] == 1) {
+                    return true;
                 }
             }
         }
