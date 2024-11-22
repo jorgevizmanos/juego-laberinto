@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class Zombie {
     // ATRIBUTOS
     //==================================================================================================================
-    private final int TAMANYO_ZOMBIE = 32; // MISMO QUE TAMNYO BLOQUE LAB
+    private final int TAMANYO_ZOMBIE = 30;
     private int x, y;
-    private int velocidad = 10; // desplazamiento del zombie MISMO QUE TAMNYO BLOQUE LAB
+    private int velocidad = 10;
+    protected Rectangle limites;
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
     private int spriteActual = 0; // indice del sprite actual (fotograma)
     private Sexo sexo;
-    protected Rectangle limites;
 
 
     // CONSTRUCTORES
@@ -97,7 +97,7 @@ public class Zombie {
                     evento.getKeyCode() == KeyEvent.VK_DOWN) {
 
                 while (movimiento > 0) {
-                    int paso = Math.min(5, movimiento);
+                    int paso = Math.min(1, movimiento);
 
                     if (evento.getKeyCode() == KeyEvent.VK_LEFT) {
                         nuevoX -= paso;
@@ -129,7 +129,7 @@ public class Zombie {
                     evento.getKeyCode() == KeyEvent.VK_S) {
 
                 while (movimiento > 0) {
-                    int paso = Math.min(5, movimiento);
+                    int paso = Math.min(1, movimiento);
 
                     if (evento.getKeyCode() == KeyEvent.VK_A) {
                         nuevoX -= paso;
