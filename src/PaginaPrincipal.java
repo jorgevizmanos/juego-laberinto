@@ -8,7 +8,7 @@ public class PaginaPrincipal extends JFrame {
     public PaginaPrincipal() {
         // Configuración del JFrame
         setTitle("Pagina Principal");
-        setSize(700, 700);
+        setSize(700, 766);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
