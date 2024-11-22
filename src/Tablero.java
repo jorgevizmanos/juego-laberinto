@@ -26,6 +26,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     private int segundosCronometro = 60;
 
     // atributos de elementos NO visuales del juego
+    private char ganador;
     private boolean juegoActivo;
     private Random random = new Random();
     private Timer animationTimer; // animaciones del juego (calabazas)
@@ -62,6 +63,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
                     segundosCronometro--;
                     if (segundosCronometro <= 0 || zombieSaleLaberinto()) {
                         finalizarJuego();
+
                     }
                     cronometro.actualizarTiempo(segundosCronometro);
                     repaint();
@@ -106,10 +108,10 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         if (!juegoActivo) return;
 
         // movemos los zombies cuando se presiona tecla y actualizar animacion solo si se movieron
-        if (zombies.get(0).moverZombie(e, laberinto)) {
+        if (zombies.get(0).moverZombieHombre(e, laberinto)) {
             zombies.get(0).actualizarAnimacion();
         }
-        if (zombies.get(1).moverZombie(e, laberinto)) {
+        if (zombies.get(1).moverZombieMujer(e, laberinto)) {
             zombies.get(1).actualizarAnimacion();
         }
 
@@ -143,6 +145,25 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         this.gameTimer.stop();
         this.animationTimer.stop();
         System.out.println("¡GAME OVER!");
+
+        Timer cambiarPanelTimer = new Timer(1000, e -> {
+            // Obtener el JFrame principal
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+            // Eliminar panel actual
+            frame.getContentPane().removeAll();
+
+            // Añadir nuevo panel
+            PaginaFinal paginaFinal = new PaginaFinal(ganador);
+            frame.getContentPane().add(paginaFinal);
+
+            // Actualizar frame
+            frame.revalidate();
+            frame.repaint();
+        });
+
+        cambiarPanelTimer.setRepeats(false);
+        cambiarPanelTimer.start();
     }
 
     // LABERINTO
@@ -190,9 +211,6 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         int filaMujer = zombieMujer.getY() / laberinto.getAltoBloque();
         int columnaMujer = zombieMujer.getX() / laberinto.getAnchoBloque();
 
-        // BORRAR LUEGO
-        System.out.println("Zombie Hombre - Fila: " + filaHombre + ", Columna: " + columnaHombre);
-        System.out.println("Zombie Mujer - Fila: " + filaMujer + ", Columna: " + columnaMujer);
 
         // IMPORTANTE [15][0]
         if (filaHombre == 14 && columnaHombre <= 0) {
