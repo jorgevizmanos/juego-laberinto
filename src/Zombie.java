@@ -13,15 +13,17 @@ public class Zombie {
     private ArrayList<Image> animacion; // lista de imagenes en donde se cargara cada sprite
     private int spriteActual = 0; // indice del sprite actual (fotograma)
     private Sexo sexo;
+    private boolean mirandoDerecha; // controla el reflejo de las imagenes (sprites) segun se muevan izq/der
 
 
     // CONSTRUCTORES
     //==================================================================================================================
     public Zombie(Sexo sexo, Component observer) { // observer necesitado para inicializar sprites
         this.sexo = sexo;
+        this.mirandoDerecha = (sexo == Sexo.HOMBRE); // hombre inicia mirando derecha, mujer izquierda
         this.animacion = new ArrayList<>();
-        this.limites = new Rectangle(0, 0, TAMANYO_ZOMBIE, TAMANYO_ZOMBIE); // limites se actualizan en metodos de mover (conforme se mueve zombie)
-        inicializarSprites(observer); // cargamos recursos sprites PERO la animacion debe ser actualizada en actionPerformed() de Tablero
+        this.limites = new Rectangle(x, y, TAMANYO_ZOMBIE / 2, TAMANYO_ZOMBIE / 2);
+        inicializarSprites(observer);
     }
 
     // METODOS
@@ -58,23 +60,33 @@ public class Zombie {
         }
     }
 
-    public void pintar(Graphics g, Component observer, boolean reflejado) {
+    public void pintar(Graphics g, Component observer, boolean esZombieMujer) {
         if (!animacion.isEmpty()) {
             Graphics2D g2d = (Graphics2D) g;
             Image spriteActual = animacion.get(this.spriteActual);
 
-            if (reflejado) {
-                // reflejamos horizontalmente la imagen
-                g2d.drawImage(spriteActual, x + getTamanyo(), y, -getTamanyo(), getTamanyo(), observer); // width inverso
+            // Para la mujer, siempre volteamos primero y luego aplicamos la dirección
+            boolean debeVoltear;
+            if (esZombieMujer) {
+                debeVoltear = !mirandoDerecha; // Invertimos la lógica para la mujer
+            } else {
+                debeVoltear = !mirandoDerecha;
+            }
 
-                g2d.setColor(Color.RED); // BORRAR MAS ADELANTE
-                g2d.drawRect(x, y, getTamanyo(), getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
+            if (debeVoltear) {
+                // reflejamos horizontalmente la imagen
+                g2d.drawImage(spriteActual, x + getTamanyo(), y, -getTamanyo(), getTamanyo(), observer);
+
+//                // REVISADOR DE LIMITES
+//                g2d.setColor(Color.RED);
+//                g2d.drawRect(limites.x, limites.y, limites.width, limites.height);
             } else {
                 // dibujo sin reflejo
                 g2d.drawImage(spriteActual, x, y, getTamanyo(), getTamanyo(), observer);
 
-                g2d.setColor(Color.RED); // BORRAR MAS ADELANTE
-                g2d.drawRect(x, y, getTamanyo(), getTamanyo()); // BORRAR MAS ADELANTE (caja envolvente al zombie)
+//                REVISADOR DE LIMITES
+//                g2d.setColor(Color.RED);
+//                g2d.drawRect(limites.x, limites.y, limites.width, limites.height);
             }
         }
     }
@@ -90,8 +102,17 @@ public class Zombie {
         boolean seMovio = false;
         int tecla = evento.getKeyCode();
 
-        // Solo procesa teclas de flechas
-        switch(tecla) {
+        // Solo procesa teclas de flechas y actualiza dirección
+        switch (tecla) {
+            case KeyEvent.VK_LEFT:
+                mirandoDerecha = false;
+                break;
+            case KeyEvent.VK_RIGHT:
+                mirandoDerecha = true;
+                break;
+        }
+
+        switch (tecla) {
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_UP:
@@ -107,7 +128,7 @@ public class Zombie {
                     if (!hayColision(nuevoX, nuevoY, laberinto)) {
                         x = nuevoX;
                         y = nuevoY;
-                        this.limites.x = x;
+                        this.limites.x = x + 9; // mas 9 para encajar con su cabeza
                         this.limites.y = y;
                         seMovio = true;
                     }
@@ -125,8 +146,17 @@ public class Zombie {
         boolean seMovio = false;
         int tecla = evento.getKeyCode();
 
-        // Solo procesa teclas WASD
-        switch(tecla) {
+        // Solo procesa teclas WASD y actualiza dirección
+        switch (tecla) {
+            case KeyEvent.VK_A:
+                mirandoDerecha = false;
+                break;
+            case KeyEvent.VK_D:
+                mirandoDerecha = true;
+                break;
+        }
+
+        switch (tecla) {
             case KeyEvent.VK_A:
             case KeyEvent.VK_D:
             case KeyEvent.VK_W:
@@ -142,8 +172,8 @@ public class Zombie {
                     if (!hayColision(nuevoX, nuevoY, laberinto)) {
                         x = nuevoX;
                         y = nuevoY;
-                        this.limites.x = x;
-                        this.limites.y = y;
+                        this.limites.x = x + 8;
+                        this.limites.y = y + 4;
                         seMovio = true;
                     }
                     movimiento -= paso;

@@ -45,8 +45,9 @@ public class Calabaza extends ObjetosMagicos {
     @Override
     public void pintar(Graphics g) {
         if (imagen != null) {
-            g.setColor(Color.RED); // BBX BORRAR AL FINAL
-            g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BBX BORRAR AL FINAL
+//            REVISADOR DE LIMITES
+//            g.setColor(Color.RED); // BBX BORRAR AL FINAL
+//            g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BBX BORRAR AL FINAL
 
             g.drawImage(imagen, x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA, null);
         }

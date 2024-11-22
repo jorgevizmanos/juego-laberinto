@@ -211,15 +211,18 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         int filaMujer = zombieMujer.getY() / laberinto.getAltoBloque();
         int columnaMujer = zombieMujer.getX() / laberinto.getAnchoBloque();
 
-
-        // IMPORTANTE [15][0]
         if (filaHombre == 14 && columnaHombre <= 0) {
             System.out.println("¡Zombie Hombre ha llegado a la salida!");
+            this.ganador = 'h';  // asignamos ganador al hombre
             return true;
         }
         if (filaMujer == 14 && columnaMujer == 0) {
             System.out.println("¡Zombie Mujer ha llegado a la salida!");
+            this.ganador = 'm';  // asignamos ganador a la mujer
             return true;
+        }
+        if (segundosCronometro <= 0) {
+            this.ganador = '\0';  // ninguno gano
         }
         return false;
     }
@@ -232,23 +235,27 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     }
 
     public void iniciarPosicionRandomCalabazas() {
-
         // recorremos el array de las calabazas para situar cada una en un lugar
         for (Calabaza calabaza : calabazas) {
             boolean posicionValida = false;
 
-            // mientras que la posicion sea invalida
             while (!posicionValida) {
-
-                // creamos coordenadas aleatorias(X,Y) de la calabaza mediante Random y almacenamos
+                // creamos coordenadas aleatorias(X,Y)
                 int x = random.nextInt(20);
                 int y = random.nextInt(20);
 
-                // si las coordenadas de la calabaza coincide con el pasillo del laberinto (con los 0s)
-                if (arrayLaberinto[y][x] == 0) {
-                    calabaza.setX(x * laberinto.getAnchoBloque()); // seteamos x
-                    calabaza.setY(y * laberinto.getAltoBloque()); // seteamos y
-                    posicionValida = true; // salimos del bucle
+                // Condiciones que debe cumplir una posición válida:
+                // 1. Debe ser un pasillo (0)
+                // 2. No debe ser la salida (2) ni el 0 a su derecha
+                // 3. No debe ser las posiciones iniciales de los zombies (0s de la segunda fila)
+                boolean esPasillo = arrayLaberinto[y][x] == 0;
+                boolean noEsSalida = !(y == 15 && (x == 0 || x == 1)); // Salida y casilla derecha
+                boolean noEsPosicionZombies = !(y == 1 && (x == 1 || x == 18)); // Posiciones iniciales zombies
+
+                if (esPasillo && noEsSalida && noEsPosicionZombies) {
+                    calabaza.setX(x * laberinto.getAnchoBloque());
+                    calabaza.setY(y * laberinto.getAltoBloque());
+                    posicionValida = true;
                 }
             }
         }
