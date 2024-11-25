@@ -8,7 +8,7 @@ public class Cronometro extends JPanel {
     public Cronometro() {
         this.setBackground(Color.BLACK);
         this.setSize(700,150);
-        tiempoLabel = new JLabel("Tiempo: 30");
+        tiempoLabel = new JLabel("Tiempo: 45");
         tiempoLabel.setForeground(Color.WHITE);
         tiempoLabel.setFont(new Font("Arial", Font.BOLD, 24));
         this.add(tiempoLabel);

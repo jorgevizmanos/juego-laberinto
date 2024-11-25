@@ -29,15 +29,15 @@ public class Laberinto {
                 if (laberinto[fila][columna] == 1) {
 
                     // pintamos muro
-                    g2d.setColor(Color.GRAY);
-                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
+//                    g2d.setColor(Color.GRAY);
+//                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
 
-                    g2d.setColor(Color.BLACK);
-                    g2d.drawRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
+//                    g2d.setColor(Color.BLACK);
+//                    g2d.drawRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
 //                    g2d.drawImage(brick, columna*40, fila*40, anchoBloque, altoBloque ,null);
                 } else {
-                    g2d.setColor(Color.WHITE);
-                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
+//                    g2d.setColor(Color.WHITE);
+//                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
 //                    g2d.drawImage(grass, columna*40, fila*40, anchoBloque, altoBloque ,null);
                 }
             }

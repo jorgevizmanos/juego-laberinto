@@ -23,7 +23,8 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     private ArrayList<Calabaza> calabazas = new ArrayList<>();
     private Pocion pocion = new Pocion();
     private Cronometro cronometro;
-    private int segundosCronometro = 60;
+    private int segundosCronometro = 45;
+    Image background;
 
     // atributos de elementos NO visuales del juego
     private char ganador;
@@ -47,6 +48,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         crearCalabazas();
 
         // inciamos posiciones de elementos visuales
+        this.background = new ImageIcon(getClass().getResource("/imagenes/background.png")).getImage();
         iniciarPosicionZombies();
         iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();
@@ -122,6 +124,9 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        // pintamos fondo
+        g.drawImage(background, 0, 0, ANCHO, ALTO, this);
 
         // pintamos laberinto
         laberinto.pintar(g);
