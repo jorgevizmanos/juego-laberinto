@@ -13,6 +13,7 @@ public class Ventana extends JFrame {
     // CONSTRUCTORES
     //==================================================================================================================
     public Ventana() {
+        this.setTitle("Laberinto del Terror");
         this.setSize(ANCHO_VENTANA, ALTO_VENTANA);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

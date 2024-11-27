@@ -7,7 +7,7 @@ public class PaginaPrincipal extends JFrame {
 
     public PaginaPrincipal() {
         // Configuración del JFrame
-        setTitle("Pagina Principal");
+        setTitle("Laberinto del Terror");
         setSize(700, 766);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

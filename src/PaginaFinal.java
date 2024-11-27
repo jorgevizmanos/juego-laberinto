@@ -100,8 +100,11 @@ public class PaginaFinal extends JPanel {
         Image titulo;
         if (ganador == '\0') {
             titulo = gameOver;
+            g.drawString("GAME OVER", 300, 200);
+
         } else {
             titulo = youWin;
+            g.drawString("YOU WON", 300, 200);
         }
         g.drawImage(titulo, getWidth()/2 - 150, 50, 300, 100, this);
 
