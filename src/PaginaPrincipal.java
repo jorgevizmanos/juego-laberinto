@@ -3,7 +3,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PaginaPrincipal extends JFrame {
+public class PaginaPrincipal extends JFrame implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+
+    Image zombiChico = new ImageIcon("/imagenes/sprites_zombieM/Walk(1).png").getImage();
+    Image zombiChica = new ImageIcon("/imagenes/sprites_zombieF/Walk(1).png").getImage();
+
+    private JButton jugarBoton = new JButton("Jugar");
+    private JButton acercaDeBoton = new JButton("Acerca de");
 
     public PaginaPrincipal() {
         // Configuración del JFrame
@@ -23,22 +31,18 @@ public class PaginaPrincipal extends JFrame {
         // Crear el JPanel para los botones con FlowLayout centrado
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        // Botón "Jugar"
-        JButton btnJugar = new JButton("Jugar");
-        btnJugar.setPreferredSize(new Dimension(200, 50));
-        btnJugar.setFont(new Font("Arial", Font.BOLD, 16));
-        btnJugar.setBackground(Color.ORANGE);
-        btnJugar.setForeground(Color.BLACK);
-        btnJugar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Ventana().setVisible(true);
-                dispose();
-            }
-        });
+        // Configurar y añadir el botón "Jugar"
+        jugarBoton.setPreferredSize(new Dimension(200, 50));
+        jugarBoton.setFont(new Font("Arial", Font.BOLD, 16));
+        jugarBoton.setForeground(Color.BLACK);
+        jugarBoton.addActionListener(this);
+        panelBotones.add(jugarBoton);
 
-        // Añadir el botón "Jugar" al panel de botones
-        panelBotones.add(btnJugar);
+        // Configurar y añadir el botón "Acerca de"
+        acercaDeBoton.setPreferredSize(new Dimension(200, 50));
+        acercaDeBoton.setFont(new Font("Arial", Font.BOLD, 16));
+        acercaDeBoton.addActionListener(this);
+        panelBotones.add(acercaDeBoton);
 
         // Añadir el panel de botones al centro del panel principal
         panelPrincipal.add(panelBotones, BorderLayout.CENTER);
@@ -50,8 +54,20 @@ public class PaginaPrincipal extends JFrame {
         setVisible(true);
     }
 
+
     public static void main(String[] args) {
         // Crear y mostrar la página
         SwingUtilities.invokeLater(PaginaPrincipal::new);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == jugarBoton) {
+            new Ventana().setVisible(true);
+            dispose();
+        } else if (e.getSource() == acercaDeBoton) {
+            // Acción para el botón "Acerca de"
+            JOptionPane.showMessageDialog(this, "Información sobre el Laberinto del Terror");
+        }
     }
 }
