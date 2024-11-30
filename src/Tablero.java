@@ -48,7 +48,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         crearCalabazas();
 
         // inciamos posiciones de elementos visuales
-        this.background = new ImageIcon(getClass().getResource("/imagenes/bg.png")).getImage();
+        this.background = new ImageIcon(getClass().getResource("/imagenes/bg2.png")).getImage();
         iniciarPosicionZombies();
         iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();

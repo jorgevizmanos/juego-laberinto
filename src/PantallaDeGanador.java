@@ -65,6 +65,4 @@ public class PantallaDeGanador extends JFrame implements ActionListener {
             System.exit(0);
         }
     }
-
-
 }
