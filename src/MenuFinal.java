@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PaginaFinal extends JPanel {
+public class MenuFinal extends JPanel {
 
     // ATRIBUTOS
     //==================================================================================================================
@@ -17,7 +17,7 @@ public class PaginaFinal extends JPanel {
 
     // CONSTRUCTOR
     //==================================================================================================================
-    public PaginaFinal(char ganador) {
+    public MenuFinal(char ganador) {
         this.ganador = ganador;
         this.setBackground(Color.LIGHT_GRAY);
         inicializarComponentes();

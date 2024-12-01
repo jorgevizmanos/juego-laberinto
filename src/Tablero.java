@@ -159,8 +159,8 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
             frame.getContentPane().removeAll();
 
             // Añadir nuevo panel
-            PaginaFinal paginaFinal = new PaginaFinal(ganador);
-            frame.getContentPane().add(paginaFinal);
+            MenuFinal menuFinal = new MenuFinal(ganador);
+            frame.getContentPane().add(menuFinal);
 
             // Actualizar frame
             frame.revalidate();

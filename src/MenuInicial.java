@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PaginaPrincipal extends JFrame implements ActionListener {
+public class MenuInicial extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -13,7 +13,7 @@ public class PaginaPrincipal extends JFrame implements ActionListener {
     private JButton jugarBoton = new JButton("Jugar");
     private JButton acercaDeBoton = new JButton("Acerca de");
 
-    public PaginaPrincipal() {
+    public MenuInicial() {
         // Configuración del JFrame
         setTitle("Laberinto del Terror");
         setSize(700, 766);
@@ -57,13 +57,13 @@ public class PaginaPrincipal extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         // Crear y mostrar la página
-        SwingUtilities.invokeLater(PaginaPrincipal::new);
+        SwingUtilities.invokeLater(MenuInicial::new);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == jugarBoton) {
-            new Ventana().setVisible(true);
+            new Juego().setVisible(true);
             dispose();
         } else if (e.getSource() == acercaDeBoton) {
             // Acción para el botón "Acerca de"

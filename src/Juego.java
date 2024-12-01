@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Ventana extends JFrame {
+public class Juego extends JFrame {
     // ATRIBUTOS
     //==================================================================================================================
     private Cronometro cronometro = new Cronometro(); // Panel
@@ -12,7 +12,7 @@ public class Ventana extends JFrame {
 
     // CONSTRUCTORES
     //==================================================================================================================
-    public Ventana() {
+    public Juego() {
         this.setTitle("Laberinto del Terror");
         this.setSize(ANCHO_VENTANA, ALTO_VENTANA);
         this.setLocationRelativeTo(null);
@@ -22,11 +22,5 @@ public class Ventana extends JFrame {
         this.add(tablero);
         this.add(cronometro, BorderLayout.SOUTH);
         this.setVisible(true);
-    }
-
-    // METODOS
-    //==================================================================================================================
-    public static void main(String[] args) {
-        new Ventana();
     }
 }
