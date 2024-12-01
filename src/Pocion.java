@@ -25,27 +25,20 @@ public class Pocion extends ObjetosMagicos{
 
     // METODOS
     //==================================================================================================================
+
+    // Metodo que simula la desaparicion de la pocion (tras ser colisionada)
     @Override
     public void desaparecer() {
         this.imagen = null;
         this.activa = false;
-        this.limites = new Rectangle(0, 0, 0, 0);  // Limites nulos
+        this.limites = new Rectangle(0, 0, 0, 0);  // limites nulos
     }
 
-    @Override
-    public void cambiarVelocidad() {
-
-    }
-
+    // Metodo que pinta la pocion con la imagen proporcionada
     @Override
     public void pintar(Graphics g) {
         if (imagen != null) {
-//            REVISADOR DE LIMITES
-//            g.setColor(Color.RED); // BBX BORRAR AL FINAL
-//            g.drawRect(x, y, TAMANIO_POCION, TAMANIO_POCION); // BBX BORRAR AL FINAL
-
             g.drawImage(imagen, x, y, TAMANIO_POCION, TAMANIO_POCION, null);
-
         }
     }
 

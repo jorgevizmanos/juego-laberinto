@@ -31,30 +31,23 @@ public class Calabaza extends ObjetosMagicos {
     // METODOS
     //==================================================================================================================
 
+    // Metodo que simula la desaparicion de una calabaza (tras ser colisionada)
     @Override
     public void desaparecer() {
         this.imagen = null;
-        this.limites = null;
+        this.limites = null; // limites nulos
     }
 
-    @Override
-    public void cambiarVelocidad() {
-
-    }
-
+    // Metodo que pinta la calabaza con la imagen proporcionada
     @Override
     public void pintar(Graphics g) {
         if (imagen != null) {
-//            REVISADOR DE LIMITES
-//            g.setColor(Color.RED); // BBX BORRAR AL FINAL
-//            g.drawRect(x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA); // BBX BORRAR AL FINAL
-
             g.drawImage(imagen, x, y, TAMANIO_CALABAZA, TAMANIO_CALABAZA, null);
         }
     }
 
+    // Metodo que mueve la calabaza de pared a parede en el laberinto del juego
     public void moverCalabaza(Laberinto laberinto) {
-
 
         // calculamos la proxima posicion en X de la calabaza
         int[][] lab = laberinto.crearLaberinto();
@@ -106,6 +99,7 @@ public class Calabaza extends ObjetosMagicos {
         this.y = y;
         this.limites.y = y;
     }
+
     public int getTAMANIO_CALABAZA() {
         return TAMANIO_CALABAZA;
     }

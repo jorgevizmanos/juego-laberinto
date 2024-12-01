@@ -3,7 +3,14 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+/*
+    Clase que genera un zombie, un jugador. Este es una animacion sprite que se activa conforme se mueve
+    mediante flechas. El zombie tiene tambien una direccion hacia la que 'mira', que varia segun la direccion
+    que toma. Ademas, segun su sexo, tendra una imagen u otra. La clase detecta tambien si ha colisionado con
+    algun elemento del tablero (calabaza y/o pocion).
+ */
 public class Zombie {
+
     // ATRIBUTOS
     //==================================================================================================================
     private int x, y;
@@ -20,7 +27,7 @@ public class Zombie {
     //==================================================================================================================
     public Zombie(Sexo sexo, Component observer) { // observer necesitado para inicializar sprites
         this.sexo = sexo;
-        this.mirandoDerecha = (sexo == Sexo.HOMBRE); // hombre inicia mirando derecha, mujer izquierda
+        this.mirandoDerecha = (sexo == Sexo.HOMBRE); // hombre se inicia mirando derecha, mujer izquierda
         this.animacion = new ArrayList<>();
         this.limites = new Rectangle(x, y, TAMANYO_ZOMBIE / 2, TAMANYO_ZOMBIE / 2);
         inicializarSprites(observer);
@@ -28,6 +35,8 @@ public class Zombie {
 
     // METODOS
     //==================================================================================================================
+
+    // metodo que inicializa los sprites para la animacion
     private void inicializarSprites(Component observer) {
         String carpeta;
         if (sexo == Sexo.HOMBRE) {
@@ -36,73 +45,81 @@ public class Zombie {
             carpeta = "sprites_zombieF";
         }
 
+        // recorremos los 5 sprites existentes para cada zombie
         for (int i = 1; i <= 5; i++) {
             try {
-                String ruta = "imagenes/" + carpeta + "/Walk (" + i + ").png";
-                Image spriteOriginal = new ImageIcon(getClass().getResource(ruta)).getImage();
+                String ruta = "imagenes/" + carpeta + "/Walk (" + i + ").png"; // ruta del recurso
+                Image spriteOriginal = new ImageIcon(getClass().getResource(ruta)).getImage(); // imagen actual
 
-                // Forzar carga inmediata
+                // forzamos la carga inmediata del recurso (evitamos laggeo)
                 MediaTracker tracker = new MediaTracker(observer);
                 tracker.addImage(spriteOriginal, 0);
                 tracker.waitForAll();
 
+                // modificamos proporcion de la imagen para ajustarla al tamanyo del zombie
                 double proporcion = (double) spriteOriginal.getWidth(observer) / spriteOriginal.getHeight(observer);
                 int nuevoAncho = (int) (TAMANYO_ZOMBIE * proporcion);
                 Image spriteEscalado = spriteOriginal.getScaledInstance(nuevoAncho, TAMANYO_ZOMBIE, Image.SCALE_SMOOTH);
 
+                // una vez escalada, esperamos a que todos los recursos se cargen y la anyadimos al array 'animacion'
                 tracker.addImage(spriteEscalado, 1);
                 tracker.waitForAll();
 
                 animacion.add(spriteEscalado);
+
             } catch (Exception e) {
                 System.out.println("Error cargando sprite " + i + ": " + e.getMessage());
             }
         }
     }
 
+    // Metodo que pinta los zombies segun su sexo
     public void pintar(Graphics g, Component observer, boolean esZombieMujer) {
+
+        // en caso de tener animacion
         if (!animacion.isEmpty()) {
             Graphics2D g2d = (Graphics2D) g;
-            Image spriteActual = animacion.get(this.spriteActual);
+            Image spriteActual = animacion.get(this.spriteActual); // obtenemos la imagen actual del sprite
 
-            // Para la mujer, siempre volteamos primero y luego aplicamos la dirección
+            // para la mujer, siempre volteamos primero y luego aplicamos su direccion
             boolean debeVoltear;
+
             if (esZombieMujer) {
-                debeVoltear = !mirandoDerecha; // Invertimos la lógica para la mujer
+                debeVoltear = !mirandoDerecha; // invertimos la logica para la mujer
+
             } else {
                 debeVoltear = !mirandoDerecha;
             }
 
+            // si debemos voltear la imagen
             if (debeVoltear) {
                 // reflejamos horizontalmente la imagen
                 g2d.drawImage(spriteActual, x + getTamanyo(), y, -getTamanyo(), getTamanyo(), observer);
 
-//                // REVISADOR DE LIMITES
-//                g2d.setColor(Color.RED);
-//                g2d.drawRect(limites.x, limites.y, limites.width, limites.height);
             } else {
                 // dibujo sin reflejo
                 g2d.drawImage(spriteActual, x, y, getTamanyo(), getTamanyo(), observer);
 
-//                REVISADOR DE LIMITES
-//                g2d.setColor(Color.RED);
-//                g2d.drawRect(limites.x, limites.y, limites.width, limites.height);
             }
         }
     }
 
+    // Metodo que actualiza la animacion de los sprites
     public void actualizarAnimacion() {
         spriteActual = (spriteActual + 1) % animacion.size(); // metodo copiado de Andres... xd
     }
 
+    // Metodo que mueve al zombie hombre en el laberinto y devuelve true o false en caso de moverse
     public boolean moverZombieHombre(KeyEvent evento, Laberinto laberinto) {
+
+        // cargamos en variables nuevas la velocidad, las coordenadas, si se movio o no y la tecla del evento
         int movimiento = velocidad;
         int nuevoX = x;
         int nuevoY = y;
         boolean seMovio = false;
         int tecla = evento.getKeyCode();
 
-        // Solo procesa teclas de flechas y actualiza dirección
+        // solo actualiza la direcciona a la que mira el zombie en base a la tecla presionada
         switch (tecla) {
             case KeyEvent.VK_LEFT:
                 mirandoDerecha = false;
@@ -112,11 +129,14 @@ public class Zombie {
                 break;
         }
 
+        // movimiento real del zombie sobre el tablero segun la flecha presionada
         switch (tecla) {
             case KeyEvent.VK_LEFT:
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_UP:
             case KeyEvent.VK_DOWN:
+
+                // mientras que haya movimiento
                 while (movimiento > 0) {
                     int paso = Math.min(1, movimiento);
 
@@ -128,25 +148,28 @@ public class Zombie {
                     if (!hayColision(nuevoX, nuevoY, laberinto)) {
                         x = nuevoX;
                         y = nuevoY;
-                        this.limites.x = x + 9; // mas 9 para encajar con su cabeza
+                        this.limites.x = x + 9; // mas 9 para encajar con su cabeza jaj
                         this.limites.y = y;
-                        seMovio = true;
+                        seMovio = true; // actualizamos
                     }
                     movimiento -= paso;
                 }
                 break;
         }
-        return seMovio;
+        return seMovio; // devolvemos si se movio
     }
 
+    // Metodo que mueve a la mujer zombie en el tablero
     public boolean moverZombieMujer(KeyEvent evento, Laberinto laberinto) {
+
+        // cargamos en variables nuevas la velocidad, las coordenadas, si se movio o no y la tecla del evento
         int movimiento = velocidad;
         int nuevoX = x;
         int nuevoY = y;
         boolean seMovio = false;
         int tecla = evento.getKeyCode();
 
-        // Solo procesa teclas WASD y actualiza dirección
+        // solo procesamos las teclas W A S D y actualiza su direccion
         switch (tecla) {
             case KeyEvent.VK_A:
                 mirandoDerecha = false;
@@ -156,6 +179,7 @@ public class Zombie {
                 break;
         }
 
+        // movimiento real del zombie sobre el tablero segun la flecha presionada
         switch (tecla) {
             case KeyEvent.VK_A:
             case KeyEvent.VK_D:
@@ -174,16 +198,19 @@ public class Zombie {
                         y = nuevoY;
                         this.limites.x = x + 8;
                         this.limites.y = y + 4;
-                        seMovio = true;
+                        seMovio = true; // actualizamos
                     }
                     movimiento -= paso;
                 }
                 break;
         }
-        return seMovio;
+        return seMovio; // devolvemos si se movio
     }
 
+    // Metodo que se encarga de verificar si hay colision contra las paredes del laberinto del juego
     private boolean hayColision(int nuevoX, int nuevoY, Laberinto laberinto) {
+
+        // cargamos en variables el array del laberinto y las dimensiones de sus bloques
         int[][] lab = laberinto.crearLaberinto();
         int anchoBloque = laberinto.getAnchoBloque();
         int altoBloque = laberinto.getAltoBloque();
@@ -195,7 +222,7 @@ public class Zombie {
         int[] puntosX = {nuevoX + margen, nuevoX + TAMANYO_ZOMBIE - margen};
         int[] puntosY = {nuevoY + margen, nuevoY + TAMANYO_ZOMBIE - margen};
 
-        // Permitir salir por la izquierda en la fila 15
+        // permite salir por la izquierda en la fila 15
         if (nuevoY / altoBloque == 15 && nuevoX < 0) {
             return false;
         }
@@ -205,13 +232,13 @@ public class Zombie {
                 int filaLab = py / altoBloque;
                 int colLab = px / anchoBloque;
 
-                // Verificar límites del laberinto
+                // verificamos los limites del laberinto
                 if (filaLab < 0 || filaLab >= lab.length ||
                         colLab < 0 || colLab >= lab[0].length) {
                     return true;
                 }
 
-                // Solo colisiona con muros (1), no con la salida (2)
+                // solo colisiona con muros (1), no con la salida (2)
                 if (lab[filaLab][colLab] == 1) {
                     return true;
                 }

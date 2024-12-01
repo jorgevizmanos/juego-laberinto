@@ -1,5 +1,8 @@
 import java.awt.*;
 
+/*
+    Clase que genera un laberinto usado en el tablero de juego
+ */
 public class Laberinto {
 
     // ATRIBUTOS
@@ -19,32 +22,34 @@ public class Laberinto {
 
     // METODOS
     //==================================================================================================================
-    public void pintar(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
 
-        int[][] laberinto = crearLaberinto(); // obtenemos el laberinto y volcamos en variable
+    // Metodo que pinta el laberinto, usado primordialmente para observar donde se encuentra (no se pintara al final, sera una imagen)
+//    public void pintar(Graphics g) {
+//        Graphics2D g2d = (Graphics2D) g;
+//
+//        int[][] laberinto = crearLaberinto(); // obtenemos el laberinto y volcamos en variable
+//
+//        for (fila = 0; fila < numeroFila; fila++) {
+//            for (columna = 0; columna < numeroColumna; columna++) {
+//                if (laberinto[fila][columna] == 1) {
+//
+//                    // pintamos muro
+////                    g2d.setColor(Color.GRAY);
+////                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
+//
+////                    g2d.setColor(Color.BLACK);
+////                    g2d.drawRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
+////                    g2d.drawImage(brick, columna*40, fila*40, anchoBloque, altoBloque ,null);
+//                } else {
+////                    g2d.setColor(Color.WHITE);
+////                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
+////                    g2d.drawImage(grass, columna*40, fila*40, anchoBloque, altoBloque ,null);
+//                }
+//            }
+//        }
+//    }
 
-        for (fila = 0; fila < numeroFila; fila++) {
-            for (columna = 0; columna < numeroColumna; columna++) {
-                if (laberinto[fila][columna] == 1) {
-
-                    // pintamos muro
-//                    g2d.setColor(Color.GRAY);
-//                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
-
-//                    g2d.setColor(Color.BLACK);
-//                    g2d.drawRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
-//                    g2d.drawImage(brick, columna*40, fila*40, anchoBloque, altoBloque ,null);
-                } else {
-//                    g2d.setColor(Color.WHITE);
-//                    g2d.fillRect(columna * anchoBloque, fila * anchoBloque, anchoBloque, altoBloque);
-//                    g2d.drawImage(grass, columna*40, fila*40, anchoBloque, altoBloque ,null);
-                }
-            }
-        }
-    }
-
-    // metodo que crea un laberinto
+    // Metodo que crea el laberinto
     public int[][] crearLaberinto() {
         int laberinto[][] = {
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},

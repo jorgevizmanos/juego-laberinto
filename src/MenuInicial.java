@@ -1,73 +1,119 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 
+/*
+    Clase que genera un menu inicial del juego. Posee dos botones principales integrados en su imagen de fondo:
+    - jugar (en la imagen llamado "Run!"): inicia el juego, dando paso a otra ventana de las mismas caracteristicas
+    - acerca de (en la imagen mostrado como "?"): muestra un mensaje con informacion didactica del juego
+ */
 public class MenuInicial extends JFrame implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
+    // ATRIBUTOS
+    //==================================================================================================================
+    private final Image backgroundImage;
+    private final JButton jugarBoton;
+    private final JButton acercaDeBoton;
 
-    Image zombiChico = new ImageIcon("/imagenes/sprites_zombieM/Walk(1).png").getImage();
-    Image zombiChica = new ImageIcon("/imagenes/sprites_zombieF/Walk(1).png").getImage();
-
-    private JButton jugarBoton = new JButton("Jugar");
-    private JButton acercaDeBoton = new JButton("Acerca de");
-
+    // CONSTRUCTORES
+    //==================================================================================================================
     public MenuInicial() {
-        // Configuración del JFrame
-        setTitle("Laberinto del Terror");
-        setSize(700, 766);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        // inicializamos variables
+        backgroundImage = new ImageIcon("src/imagenes/menuI.png").getImage();
+        jugarBoton = new JButton("");
+        acercaDeBoton = new JButton("");
 
-        // Crear el JPanel principal con BorderLayout
-        JPanel panelPrincipal = new JPanel(new BorderLayout());
+        // propiedades de la ventana
+        this.setTitle("Eazy ezcape!");
+        this.setSize(700, 800);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setUndecorated(true);  // elimina decoraciones propias de una ventana (y permite ver su contenido global)
 
-        // Crear el JLabel para el texto superior
-        JLabel textoSuperior = new JLabel("Bienvenido al Laberinto del Terror", JLabel.CENTER);
-        textoSuperior.setFont(new Font("Serif", Font.BOLD, 24));
-        panelPrincipal.add(textoSuperior, BorderLayout.NORTH);
+        // creamos panel (con imagen de fondo)
+        JPanel panelFondo = crearImagenFondo();
 
-        // Crear el JPanel para los botones con FlowLayout centrado
-        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        // agregamos los componentes al panel
+        agregarComponentesAlPanel(panelFondo);
 
-        // Configurar y añadir el botón "Jugar"
-        jugarBoton.setPreferredSize(new Dimension(200, 50));
-        jugarBoton.setFont(new Font("Arial", Font.BOLD, 16));
-        jugarBoton.setForeground(Color.BLACK);
-        jugarBoton.addActionListener(this);
-        panelBotones.add(jugarBoton);
-
-        // Configurar y añadir el botón "Acerca de"
-        acercaDeBoton.setPreferredSize(new Dimension(200, 50));
-        acercaDeBoton.setFont(new Font("Arial", Font.BOLD, 16));
-        acercaDeBoton.addActionListener(this);
-        panelBotones.add(acercaDeBoton);
-
-        // Añadir el panel de botones al centro del panel principal
-        panelPrincipal.add(panelBotones, BorderLayout.CENTER);
-
-        // Añadir el panel principal al JFrame
-        add(panelPrincipal);
-
-        // Hacer visible el JFrame
+        // anyadimos el panel a la ventana y la setteamos a visible
+        add(panelFondo);
         setVisible(true);
     }
 
+    // METODOS
+    //==================================================================================================================
 
-    public static void main(String[] args) {
-        // Crear y mostrar la página
-        SwingUtilities.invokeLater(MenuInicial::new);
+    // Metodo que crea un panel, pinta la imagen background del fondo y lo devuelve
+    private JPanel crearImagenFondo() {
+        // creamos panel y sobreescribimos su paintComponent para dibujar imagen
+        JPanel panelImagenFondo = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    // cargamos imagen en el panel (con las mismas dimensiones)
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+
+        // setteamos el layout a null puesto que manejamos nosotros el disenyo
+        panelImagenFondo.setLayout(null);
+        return panelImagenFondo;
     }
 
+    // Metodo que anyade los componentes visuales e interactivos (texto y botones) al panel de fondo
+    private void agregarComponentesAlPanel(JPanel panel) {
+        // configuracion del titulo
+        JLabel textoSuperior = new JLabel("Eazy Ezcape", JLabel.CENTER);
+        textoSuperior.setFont(new Font("Serif", Font.BOLD, 24));
+        textoSuperior.setForeground(Color.WHITE);
+        textoSuperior.setBounds(150, 50, 400, 30);
+        panel.add(textoSuperior);
+
+        // configuracion del boton 'Jugar'
+        jugarBoton.setFont(new Font("Arial", Font.BOLD, 16));
+        jugarBoton.setForeground(Color.BLACK);
+        jugarBoton.setBounds(250, 460, 150, 50);
+        jugarBoton.addActionListener(this);
+        jugarBoton.setContentAreaFilled(false);
+        jugarBoton.setBorderPainted(false);
+        jugarBoton.setOpaque(false);
+        jugarBoton.setFocusPainted(false);
+
+        panel.add(jugarBoton);
+
+        // configurar el boton 'Acerca de'
+        acercaDeBoton.setFont(new Font("Arial", Font.BOLD, 16));
+        acercaDeBoton.setBounds(185, 265, 55, 65);
+        acercaDeBoton.addActionListener(this);
+        acercaDeBoton.setContentAreaFilled(false);
+        acercaDeBoton.setBorderPainted(false);
+        acercaDeBoton.setOpaque(false);
+        acercaDeBoton.setFocusPainted(false);
+        panel.add(acercaDeBoton);
+    }
+
+    // ACTION PERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == jugarBoton) {
             new Juego().setVisible(true);
             dispose();
         } else if (e.getSource() == acercaDeBoton) {
-            // Acción para el botón "Acerca de"
-            JOptionPane.showMessageDialog(this, "Información sobre el Laberinto del Terror");
+            String textoInformativo = "Tu zalir del zementerio... tu comer zerebrozzz"
+                    + "\n...calabazas malas, pozion rica!\n...oponente dudoso";
+            JOptionPane.showMessageDialog(this, textoInformativo);
         }
+    }
+
+    // MAIN
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MenuInicial::new);
     }
 }
