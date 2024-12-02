@@ -22,7 +22,7 @@ public class MenuInicial extends JFrame implements ActionListener {
     //==================================================================================================================
     public MenuInicial() {
         // inicializamos variables
-        backgroundImage = new ImageIcon("src/imagenes/menuI.png").getImage();
+        backgroundImage = new ImageIcon("src/imagenes/menuPrincipal.png").getImage();
         jugarBoton = new JButton("");
         acercaDeBoton = new JButton("");
 
@@ -69,29 +69,21 @@ public class MenuInicial extends JFrame implements ActionListener {
 
     // Metodo que anyade los componentes visuales e interactivos (texto y botones) al panel de fondo
     private void agregarComponentesAlPanel(JPanel panel) {
-        // configuracion del titulo
-        JLabel textoSuperior = new JLabel("Eazy Ezcape", JLabel.CENTER);
-        textoSuperior.setFont(new Font("Serif", Font.BOLD, 24));
-        textoSuperior.setForeground(Color.WHITE);
-        textoSuperior.setBounds(150, 50, 400, 30);
-        panel.add(textoSuperior);
 
-        // configuracion del boton 'Jugar'
-        jugarBoton.setFont(new Font("Arial", Font.BOLD, 16));
-        jugarBoton.setForeground(Color.BLACK);
-        jugarBoton.setBounds(250, 460, 150, 50);
+        // configuracion del boton 'Jugar' (en la imagen fondo 'RUN!!')
+        jugarBoton.setBounds(295, 510, 110, 45);
         jugarBoton.addActionListener(this);
+        jugarBoton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         jugarBoton.setContentAreaFilled(false);
         jugarBoton.setBorderPainted(false);
-        jugarBoton.setOpaque(false);
+        acercaDeBoton.setOpaque(false);
         jugarBoton.setFocusPainted(false);
-
         panel.add(jugarBoton);
 
-        // configurar el boton 'Acerca de'
-        acercaDeBoton.setFont(new Font("Arial", Font.BOLD, 16));
-        acercaDeBoton.setBounds(185, 265, 55, 65);
+        // configurar el boton 'Acerca de' (en la imagen fondo '?')
+        acercaDeBoton.setBounds(185, 300, 55, 65);
         acercaDeBoton.addActionListener(this);
+        acercaDeBoton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         acercaDeBoton.setContentAreaFilled(false);
         acercaDeBoton.setBorderPainted(false);
         acercaDeBoton.setOpaque(false);

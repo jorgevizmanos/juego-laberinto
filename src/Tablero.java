@@ -29,7 +29,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     private ArrayList<Calabaza> calabazas = new ArrayList<>();
     private Pocion pocion = new Pocion();
     private Cronometro cronometro;
-    private int segundosCronometro = 45;
+    private int segundosCronometro = 2;
     Image background;
 
     // atributos de elementos NO visuales del juego
@@ -54,7 +54,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
         crearCalabazas();
 
         // inciamos posiciones de elementos visuales
-        this.background = new ImageIcon(getClass().getResource("/imagenes/bg2.png")).getImage();
+        this.background = new ImageIcon(getClass().getResource("/imagenes/tablero.png")).getImage();
         iniciarPosicionZombies();
         iniciarPosicionRandomCalabazas();
         iniciarPosicionRandomPocion();
