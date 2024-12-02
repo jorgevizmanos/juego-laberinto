@@ -74,5 +74,14 @@ public class MenuFinal extends JPanel {
         super.paintComponent(g);
         Image imagenResultado = ganador == '\0' ? gameOver : youWin;
         g.drawImage(imagenResultado, 0, 0, getWidth(), getHeight(), this);
+
+        // Si hay un ganador, dibujamos su sprite sobre el youWin
+        if (ganador == 'h') {
+            Image zombieHombre = new ImageIcon(getClass().getResource("imagenes/sprites_zombieM/Walk (1).png")).getImage();
+            g.drawImage(zombieHombre, getWidth()/2 - 100, 300, 200, 200, this);
+        } else if (ganador == 'm') {
+            Image zombieMujer = new ImageIcon(getClass().getResource("imagenes/sprites_zombieF/Walk (1).png")).getImage();
+            g.drawImage(zombieMujer, getWidth()/2 - 100, 300, 200, 200, this);
+        }
     }
 }

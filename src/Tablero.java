@@ -29,7 +29,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
     private ArrayList<Calabaza> calabazas = new ArrayList<>();
     private Pocion pocion = new Pocion();
     private Cronometro cronometro;
-    private int segundosCronometro = 2;
+    private int segundosCronometro = 45;
     Image background;
 
     // atributos de elementos NO visuales del juego
