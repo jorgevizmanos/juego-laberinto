@@ -11,7 +11,7 @@ public class Cronometro extends JPanel {
         this.setBackground(Color.BLACK);
         this.setSize(700, 100);
 
-        this.imagen = new ImageIcon(getClass().getResource("/imagenes/cronometro2.png")).getImage();
+        this.imagen = new ImageIcon(getClass().getResource("/imagenes/cronometro.png")).getImage();
 
         tiempoLabel = new JLabel("Tiempo: 45");
         tiempoLabel.setForeground(Color.WHITE);

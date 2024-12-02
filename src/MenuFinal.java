@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
     - Se ha terminado el tiempo y ningun zombie ha ganado
  */
 public class MenuFinal extends JPanel {
+
+    // ATRIBUTOS
+    // =================================================================================================================
     private char ganador;
     private JButton btnJugarDeNuevo;
     private JButton btnSalir;
@@ -22,7 +25,11 @@ public class MenuFinal extends JPanel {
         inicializarComponentes();
     }
 
+    // CONSTRUCTORES
+    // =================================================================================================================
     private void inicializarComponentes() {
+
+        // volcamos imagenes en variables de la clase
         try {
             gameOver = new ImageIcon(getClass().getResource("/imagenes/gameOver.png")).getImage();
             youWin = new ImageIcon(getClass().getResource("/imagenes/youwin.png")).getImage();
@@ -30,28 +37,35 @@ public class MenuFinal extends JPanel {
             System.out.println("Error cargando imágenes: " + e.getMessage());
         }
 
-        btnSalir = new JButton("");
+        // creamos boton de SALIR (y lo hacemos funcional pero transparente, pues la imagen posee el boton dinbujado)
+        btnSalir = new JButton();
         btnSalir.setBounds(45, 670, 105, 70);
-        btnSalir.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSalir.addActionListener(e -> System.exit(0));
-        btnSalir.setContentAreaFilled(false);  // Sin relleno
-        btnSalir.setBorderPainted(false);      // Sin borde
-        btnSalir.setFocusPainted(false);       // Sin efecto focus
-        btnSalir.setOpaque(false);             // Transparente
+        btnSalir.setCursor(new Cursor(Cursor.HAND_CURSOR)); // para mostrar manita sobre el boton
+        btnSalir.addActionListener(e -> System.exit(0)); // CERRAMOS VENTANA SALIENDO DEL SISTEMA
+        btnSalir.setContentAreaFilled(false);  // sin relleno
+        btnSalir.setBorderPainted(false); // sin borde
+        btnSalir.setFocusPainted(false); // sin efecto focus
+        btnSalir.setOpaque(false);// transparente
 
-        btnJugarDeNuevo = new JButton("");
+
+        // creamos boton de RESTART (y lo hacemos funcional pero transparente, pues la imagen posee el boton dinbujado)
+        btnJugarDeNuevo = new JButton();
         btnJugarDeNuevo.setBounds(492, 670, 170, 70);
-        btnJugarDeNuevo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnJugarDeNuevo.addActionListener(e -> reiniciarJuego());
-        btnJugarDeNuevo.setContentAreaFilled(false);
-        btnJugarDeNuevo.setBorderPainted(false);
-        btnJugarDeNuevo.setFocusPainted(false);
-        btnJugarDeNuevo.setOpaque(false);
+        btnJugarDeNuevo.setCursor(new Cursor(Cursor.HAND_CURSOR)); // para mostrar manita sobre el boton
+        btnJugarDeNuevo.addActionListener(e -> reiniciarJuego()); // REINICIA EL JUEGO
+        btnJugarDeNuevo.setContentAreaFilled(false); // sin relleno
+        btnJugarDeNuevo.setBorderPainted(false); // sin borde
+        btnJugarDeNuevo.setFocusPainted(false); // sin efecto focus
+        btnJugarDeNuevo.setOpaque(false); // transparente
 
         add(btnJugarDeNuevo);
         add(btnSalir);
     }
 
+    // METODOS
+    // =================================================================================================================
+
+    // Metodo que reinicia el juego de nuevo, trayendo las clases sobre este mismo panel
     private void reiniciarJuego() {
         JFrame ventana = (JFrame) SwingUtilities.getWindowAncestor(this);
         ventana.getContentPane().removeAll();
@@ -69,13 +83,16 @@ public class MenuFinal extends JPanel {
         tablero.requestFocusInWindow();
     }
 
+    // PAINTCOMPONENT
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        // en base a si gana un zombie o ninguno, dibujamos un fondo de ganadores u otro de Game Over
         Image imagenResultado = ganador == '\0' ? gameOver : youWin;
         g.drawImage(imagenResultado, 0, 0, getWidth(), getHeight(), this);
 
-        // Si hay un ganador, dibujamos su sprite sobre el youWin
+        // si hay un ganador, dibujamos al zombie (sprite 1) sobre el fondo de ganadores
         if (ganador == 'h') {
             Image zombieHombre = new ImageIcon(getClass().getResource("imagenes/sprites_zombieM/Walk (1).png")).getImage();
             g.drawImage(zombieHombre, getWidth()/2 - 100, 300, 200, 200, this);

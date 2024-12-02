@@ -37,10 +37,4 @@ public class Juego extends JFrame {
         this.add(cronometro);
         this.setVisible(true);
     }
-
-    // METODOS
-    //==================================================================================================================
-    public static void main(String[] args) {
-        new Juego();
-    }
 }

@@ -193,7 +193,7 @@ public class Tablero extends JPanel implements ActionListener, KeyListener {
                     ventana.revalidate();
                     ventana.repaint();
 
-                    System.out.println("Llegaste al Menu Final");
+                    System.out.println("Llegaste al Menu Final: puedes salir o volver a jugar!");
 
                 } else {
                     System.err.println("No se pudo obtener el JFrame");
