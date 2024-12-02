@@ -85,14 +85,16 @@ public class MenuFinal extends JPanel {
 
     // metodo que se encarga de reiniciar el juego (regresar a Tablero)
     private void reiniciarJuego() {
-
         // creamos una ventana
         JFrame ventana = (JFrame) SwingUtilities.getWindowAncestor(this);
-        ventana.getContentPane().removeAll(); // obtenemos y eliminamos todos los elementos actuales del panel
+        ventana.getContentPane().removeAll();
 
         // creamos nuevos componentes del juego: Tablero + Cronometro
         Cronometro cronometro = new Cronometro();
         Tablero tablero = new Tablero(cronometro);
+
+        // configuramos dimensiones especidicas del cronometro
+        cronometro.setPreferredSize(new Dimension(700, 100)); // Ajusta estos valores según necesites
 
         // los anyadimos al ventana creada
         ventana.setLayout(new BorderLayout());
